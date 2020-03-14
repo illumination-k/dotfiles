@@ -14,7 +14,6 @@ select-word-style default
 autoload -Uz zmv
 alias zmv='noglob zmv -W'
 
-
 # zsyle
 ## 補完後、メニュー選択モードになり左右キーで移動が出来る
 zstyle ':completion:*:default' menu select=2

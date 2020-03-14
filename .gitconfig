@@ -9,3 +9,6 @@
     quotepath = false
 [color]
 	ui = auto
+[ailias]
+    st = status
+    cm = commit -m
