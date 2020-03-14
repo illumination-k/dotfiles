@@ -1,5 +1,6 @@
 # Common aliases
-alias ..='cd ..'
+
+os_detect
 
 function mkcd() {
   if [[ -d $1 ]]; then

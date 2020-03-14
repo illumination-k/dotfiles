@@ -3,6 +3,7 @@
 if type starship >/dev/null 2>&1; then
     echo "use starship prompt"
     eval "$(starship init zsh)"
+    export STARSHIP_CONFIG=~/.starship
 else
     echo "use default zsh prompt"
     PROMPT="%(?.%{${fg[green]}%}.%{${fg[red]}%})%n${reset_color}@${fg[blue]}%m${reset_color}(%*%) %~
