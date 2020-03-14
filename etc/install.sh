@@ -35,7 +35,9 @@ fi
 # 移動できたらリンクを実行する
 for f in .??*
 do
-    [ "$f" = ".git" ] && continue
+    [[ "$f" = ".git" ]] && continue
+    [[ "$f" == ".DS_Store" ]] && continue
+    [[ "$f" == ".gitignore" ]] && continue
 
     ln -snfv "$DOTPATH/$f" "$HOME/$f"
 done

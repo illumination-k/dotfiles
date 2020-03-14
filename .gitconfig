@@ -1,0 +1,11 @@
+[user]
+	name = illumination-k
+	email = illumination.k.27@gmail.com
+[core]
+	filemode = false
+	excludesfile = ~/.gitignore_global
+	editor = vim
+    ignorecase = false
+    quotepath = false
+[color]
+	ui = auto
