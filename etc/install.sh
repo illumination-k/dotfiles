@@ -40,5 +40,5 @@ do
     [[ "$f" == ".DS_Store" ]] && continue
     [[ "$f" == ".gitignore" ]] && continue
 
-    ln -snfv "$DOTPATH/$f" "$HOME/$f"
+    ln -sfv "$DOTPATH/$f" "$HOME/$f"
 done

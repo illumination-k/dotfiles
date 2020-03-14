@@ -3,9 +3,10 @@
 if type starship >/dev/null 2>&1; then
     echo "use starship prompt"
     eval "$(starship init zsh)"
-    export STARSHIP_CONFIG=~/.starship
+    export STARSHIP_CONFIG=$HOME/.starship.toml
 else
     echo "use default zsh prompt"
+    echo "recommend to install starship"
     PROMPT="%(?.%{${fg[green]}%}.%{${fg[red]}%})%n${reset_color}@${fg[blue]}%m${reset_color}(%*%) %~
     %# "
     RPROMPT="%{${fg[blue]}%}[%~]%{${reset_color}%}"

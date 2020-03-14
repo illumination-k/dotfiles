@@ -1,6 +1,8 @@
 if type zinit >/dev/null 2>&1; then
-    mkdir -p ~/.zinit
-    git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
+    if [ ! -d ~/.zinit ]; then
+        mkdir -p ~/.zinit
+        git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
+    fi
 fi
 
 source ~/.zinit/bin/zinit.zsh

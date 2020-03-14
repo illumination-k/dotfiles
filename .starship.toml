@@ -41,12 +41,17 @@ prompt_order = [
 # Wait 60 milliseconds for starship to check files under the current directory.
 scan_timeout = 60
 
+[character]
+symbol = "❯❯"
+error_symbol = "✖✖"
+use_symbol_for_status = true
+
 [git_branch]
-symbol = "🌱 "
-truncation_length = 4
-truncation_symbol = ""
+symbol = "🌱  "
+truncation_length = 10
+truncation_symbol = "..."
 
 [time]
 disabled = false
-format = "🕙[ %T ]"
+format = "🕙 [%T]"
 utc_time_offset = -5

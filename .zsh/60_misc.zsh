@@ -6,6 +6,8 @@ colors
 # 補完
 autoload -Uz compinit
 compinit
+setopt auto_list
+setopt auto_menu
 
 autoload -Uz select-word-style
 select-word-style default
