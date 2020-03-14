@@ -4,18 +4,18 @@ DOTPATH=~/.dotfiles
 GITHUB_URL="https://github.com/illumination-k/dotfiles.git"
 
 # git が使えるなら git
-if has "git"; then
+if type git >/dev/null; then
     git clone --recursive "$GITHUB_URL" "$DOTPATH"
 
 # 使えない場合は curl か wget を使用する
-elif has "curl" || has "wget"; then
+elif type curl >/dev/null || type wget >/dev/null; then
     tarball="https://github.com/illumination-k/dotfiles/archive/master.tar.gz"
 
     # どっちかでダウンロードして，tar に流す
-    if has "curl"; then
+    if type curl >/dev/null; then
         curl -L "$tarball"
 
-    elif has "wget"; then
+    elif type wget >/dev/null; then
         wget -O - "$tarball"
 
     fi | tar zxv
