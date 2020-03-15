@@ -10,5 +10,6 @@ autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
 zinit ice wait'!0'; zinit load zsh-users/zsh-syntax-highlighting
+zinit ice wait'!0'; zinit load zsh-users/zsh-autosuggestions
 zinit ice wait'!0'; zinit load zsh-users/zsh-completions
 
