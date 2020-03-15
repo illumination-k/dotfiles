@@ -19,6 +19,9 @@ if [[ $PLATFORM == osx ]]; then
     alias lsa='ls -aFG'
   fi
 elif [[ $PLATFORM == linux ]]; then
+  if [ -f ~/.colorrc ]; then
+    eval `dircolors ~/.colorrc`
+  fi
   alias ls='ls -F --color=auto'
   alias lsa='ls -aF --color=auto'
 else
