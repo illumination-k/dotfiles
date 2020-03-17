@@ -28,6 +28,8 @@ else
   echo "unknown platform"
 fi
 
+alias ldrun='docker run --rm -v `pwd`:/local_volume'
+
 function mkcd() {
   if [[ -d $1 ]]; then
     echo "$1 already exists!"

@@ -54,4 +54,5 @@ truncation_symbol = "..."
 [time]
 disabled = false
 format = "🕙 [%T]"
+style = "bold blue"
 utc_time_offset = -5
