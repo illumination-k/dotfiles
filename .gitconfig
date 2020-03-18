@@ -5,14 +5,14 @@
 	filemode = false
 	excludesfile = ~/.gitignore_global
 	editor = vim
-    ignorecase = false
-    quotepath = false
+	ignorecase = false
+	quotepath = false
 [color]
 	ui = auto
 [alias]
-    st = status
+	st = status
 	aa = add .
-    cm = commit -m
+	cm = commit -m
 	puom = push -u origin master
 	graph = log --graph --date-order --all --pretty=format:'%h %Cred%d %Cgreen%ad %Cblue%cn %Creset%s' --date=short
 [github]
