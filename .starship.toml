@@ -47,7 +47,7 @@ error_symbol = "✖✖"
 use_symbol_for_status = true
 
 [git_branch]
-symbol = "🌱  "
+symbol = "🐈 "
 truncation_length = 10
 truncation_symbol = "..."
 
