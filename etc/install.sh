@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DOTPATH=~/.dotfiles
+DOTPATH=~/dotfiles
 GITHUB_URL="https://github.com/illumination-k/dotfiles.git"
 
 # git が使えるなら git

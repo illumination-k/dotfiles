@@ -1,9 +1,7 @@
 # PROMPT settings
-
-if type starship >/dev/null 2>&1; then
-    echo "use starship prompt"
-    eval "$(starship init zsh)"
+if has_cmd starship; then 
     export STARSHIP_CONFIG=$HOME/.starship.toml
+    eval "$(starship init zsh)"
 else
     echo "use default zsh prompt"
     echo "recommend to install starship"
