@@ -42,8 +42,9 @@ prompt_order = [
 scan_timeout = 60
 
 [character]
-symbol = "❯❯"
+symbol = "❮INSERT❯"
 error_symbol = "✖✖"
+vicmd_symbol = "❮NORMAL❯"
 use_symbol_for_status = true
 
 [git_branch]

@@ -10,6 +10,7 @@ export PROMPT_COMMAND='history -a; history -r'
 
 ##### key bind (vim) #####
 set -o vi
+bind '"jj": vi-movement-mode'
 
 ##### ailias #####
 # Common aliases
