@@ -9,7 +9,6 @@ set cursorline
 set laststatus=2
 set showmode
 set ruler
-set ruler
 
 " tab
 set expandtab
