@@ -16,7 +16,8 @@ setopt no_flow_control
 setopt auto_cd
 # correct commands
 setopt correct
-
+# カッコの対応などを自動的に補完する
+setopt auto_param_keys
 # No Beep
 setopt no_beep
 setopt no_list_beep
