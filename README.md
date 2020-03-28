@@ -23,6 +23,9 @@ curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/bin/car
 ### SHELL
 - zsh
 
+### screen
+- tmux
+
 ### PROMPT
 - starship
 
@@ -42,6 +45,7 @@ curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/bin/car
 
 #### mac
 - gls or exa
+- brew
 
 #### linux
 - xsel
@@ -50,4 +54,5 @@ curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/bin/car
 
 ## ROADMAP
 
-- [] 
+- [] add screen shot
+- [] CI
