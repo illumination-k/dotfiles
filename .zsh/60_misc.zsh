@@ -1,7 +1,6 @@
 # auto loaded
 # 色を使用
 autoload -Uz colors
-colors
 
 # 補完
 # autoload -Uz compinit
@@ -12,10 +11,6 @@ setopt auto_menu
 
 autoload -Uz select-word-style
 select-word-style default
-
-# 複数ファイルのmv 例　zmv *.txt *.txt.bk
-autoload -Uz zmv
-alias zmv='noglob zmv -W'
 
 # zsyle
 ## 補完後、メニュー選択モードになり左右キーで移動が出来る

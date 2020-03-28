@@ -23,6 +23,7 @@ elif [[ $PLATFORM == linux ]]; then
   if has_cmd exa; then
     alias ls='exa -F'
     alias lsa='exa -aF'
+    alias tree='exa -hTF --ignore-glob=".git"'
   else
     if [ -f ~/.colorrc ]; then
       eval `dircolors ~/.colorrc`
@@ -43,6 +44,10 @@ alias dot='cd ~/dotfiles'
 # docker
 alias d='docker'
 alias ldrun='docker run --rm -it -v `pwd`:/local_volume'
+
+# 複数ファイルのmv 例　zmv *.txt *.txt.bk
+autoload -Uz zmv
+alias zmv='noglob zmv -W'
 
 # git
 alias g='git'
