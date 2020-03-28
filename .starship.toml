@@ -48,12 +48,12 @@ vicmd_symbol = "❮NORMAL❯"
 use_symbol_for_status = true
 
 [git_branch]
-symbol = "🐈 "
+symbol = "🐈  "
 truncation_length = 10
 truncation_symbol = "..."
 
 [time]
 disabled = false
-format = "🕙 [%T]"
+format = "🕙  [%T]"
 style = "bold blue"
 utc_time_offset = -5
