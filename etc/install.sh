@@ -28,7 +28,7 @@ else
     die "curl or wget required"
 fi
 
-cd ~/.dotfiles
+cd $DOTPATH 
 if [ $? -ne 0 ]; then
     die "not found: $DOTPATH"
 fi
