@@ -4,8 +4,9 @@ autoload -Uz colors
 colors
 
 # 補完
-autoload -Uz compinit
-compinit
+# autoload -Uz compinit
+# compinit
+## compinit is loaded in zinit
 setopt auto_list
 setopt auto_menu
 

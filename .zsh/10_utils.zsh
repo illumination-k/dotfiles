@@ -1,3 +1,19 @@
+# detect platform has function or not
+has_cmd() {
+    if type $1 >/dev/null 2>&1; then
+        return 0 
+    else
+        return 1
+    fi
+}
+
+not_has_cmd() {
+    if type $1 >/dev/null 2>&1; then
+        return 1
+    else
+        return 0
+    fi
+}
 # ostype returns the lowercase OS name
 ostype() {
     echo ${(L):-$(uname)}

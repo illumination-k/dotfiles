@@ -38,6 +38,6 @@ for f in .??*; do
     [[ "$f" = ".git" ]] && continue
     [[ "$f" == ".DS_Store" ]] && continue
     [[ "$f" == ".gitignore" ]] && continue
-
+    [[ "$f" == ".github" ]] && continue
     ln -sfv "$DOTPATH/$f" "$HOME/$f"
 done

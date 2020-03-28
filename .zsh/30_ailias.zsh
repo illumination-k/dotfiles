@@ -20,11 +20,16 @@ if [[ $PLATFORM == osx ]]; then
     alias lsa='ls -aFG'
   fi
 elif [[ $PLATFORM == linux ]]; then
-  if [ -f ~/.colorrc ]; then
-    eval `dircolors ~/.colorrc`
+  if has_cmd exa; then
+    alias ls='exa -F'
+    alias lsa='exa -aF'
+  else
+    if [ -f ~/.colorrc ]; then
+      eval `dircolors ~/.colorrc`
+    fi
+    alias ls='ls -F --color=auto'
+    alias lsa='ls -aF --color=auto'
   fi
-  alias ls='ls -F --color=auto'
-  alias lsa='ls -aF --color=auto'
 else
   echo "unknown platform"
 fi
@@ -32,6 +37,8 @@ fi
 # cd
 alias ..2='cd ../..'
 alias ..3='cd ../../..'
+alias h='cd ~'
+alias dot='cd ~/dotfiles'
 
 # docker
 alias d='docker'
@@ -39,6 +46,9 @@ alias ldrun='docker run --rm -it -v `pwd`:/local_volume'
 
 # git
 alias g='git'
+
+# grep
+alias grep='grep --color'
 
 # zshrc
 if has_cmd code; then
@@ -49,8 +59,22 @@ fi
 
 alias reload="source ~/.zshrc"
 
-# others
-alias c='pbcopy'
+# pbcopy (mac: pbcopy, WSL: clip.exe, Linux: xsel)
+if [[ $PLATFORM == osx ]]; then
+  alias c='pbcopy'
+elif [[ $(uname -r | cut -f 3 -d "-") == "Microsoft" ]]; then
+  alias c='clip.exe'
+elif [[ $PLATFORM == linux ]]; then
+  if has_cmd xsel; then
+    alias c='xsel --clipboard --input'
+  else
+    echo "please install xsel to use c alias"
+  fi
+else
+  echo "Unknown platform"
+fi
+
+alias getpwd='pwd | c'
 
 # suffix
 alias -s py=python
@@ -72,17 +96,3 @@ function extract() {
   esac
 }
 alias -s {gz,tgz,zip,lzh,bz2,tbz,Z,tar,arj,xz}=extract
-
-# utils functions
-function mkcd() {
-  if [[ -d $1 ]]; then
-    echo "$1 already exists!"
-    cd $1
-  else
-    mkdir -p $1 && cd $1
-  fi
-}
-
-function cdls() {
-    cd $1 && ls
-}
