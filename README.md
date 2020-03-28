@@ -62,7 +62,14 @@ curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/bin/dep
 ## ROADMAP
 
 - [x] zcompile
-- [ ] add screenshot
+- [x] add screenshot
 - [ ] CI by github action
+    - [ ] multi platform
+    - [x] install.sh
+    - [ ] cargo_installer.sh
+    - [ ] dependencies_installer.sh
 - [ ] administrating by make
 - [ ] update dependencies installer
+
+## License
+MIT
