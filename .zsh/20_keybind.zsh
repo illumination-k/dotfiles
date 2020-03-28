@@ -2,7 +2,7 @@
 bindkey -v
 bindkey "jj" vi-cmd-mode
 
-
+autoload -Uz is-at-least
 if is-at-least 5.0.8; then
     # select-quoted
     autoload -U select-quoted
