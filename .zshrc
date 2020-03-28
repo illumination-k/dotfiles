@@ -3,8 +3,6 @@ for f in `ls ~/.zsh/[0-9]*.zsh`; do
 done
 
 # compile zshrc
-if [ ! -f ~/.zshrc.zwc ] || [~/.zshrc -nt ~/.zshrc.zwc ]; then
+if [ ! -f ~/.zshrc.zwc ] || [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
    zcompile ~/.zshrc
 fi
-
-source ~/.profile
