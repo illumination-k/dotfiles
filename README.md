@@ -54,5 +54,6 @@ curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/bin/car
 
 ## ROADMAP
 
-- [] add screen shot
-- [] CI
+- [x] zcompile
+- [ ] add screen shot
+- [ ] CI
