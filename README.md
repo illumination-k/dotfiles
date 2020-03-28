@@ -2,6 +2,8 @@
 
 dotfiles of illumination-k
 
+![terminal](doc/terminal.PNG)
+
 ## Usage
 
 ### dotfiles
@@ -13,7 +15,7 @@ curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/etc/ins
 ### install cargo dependencies
 
 ```
-curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/bin/cargo_installer.sh | bash
+curl -L https://raw.githubuercontent.com/illumination-k/dotfiles/master/bin/cargo_installer.sh | bash
 ```
 
 

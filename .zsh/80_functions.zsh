@@ -16,6 +16,8 @@ function col() {
     awk -v col=$1 '{print $col}'
 }
 
+# read files
+
 function rcsv() {
   cat $1 | column -t -s $"," | less -S
 }
@@ -30,6 +32,10 @@ function rtable() {
 
 function rztable() {
   cat $1 | column -t | less -S
+}
+
+function rvcf() {
+  zcat $1 | grep -v "#" | column -t | less -S
 }
 
 function skip() {
