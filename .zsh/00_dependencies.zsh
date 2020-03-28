@@ -15,6 +15,7 @@ not_has_cmd() {
     fi
 }
 
+# install dependencies
 if not_has_cmd starship; then        
     if has_cmd curl; then
         curl -fsSL https://starship.rs/install.sh | bash --yes
