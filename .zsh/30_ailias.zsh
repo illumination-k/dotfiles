@@ -3,36 +3,36 @@
 # ls
 os_detect
 
-if [[ $PLATFORM == osx ]]; then
-  if [ -x /usr/local/bin/gdircolors ]; then
-    if [ -f ~/.colorrc ]; then
-      eval `gdircolors ~/.colorrc`
-      alias ls='gls -F --color=auto'
-      alias lsa='gls -aF --color=auto'
-    else
-      echo "colorrc does not exist"
-      alias ls='gls -F --color=auto'
-      alias lsa='gls -aF --color=auto'
-    fi
-  else
-    echo "I recommend to install gdircolors and make colorrc"
-    alias ls='ls -FG'
-    alias lsa='ls -aFG'
-  fi
-elif [[ $PLATFORM == linux ]]; then
-  if has_cmd exa; then
+if has_cmd exa; then
     alias ls='exa -F'
     alias lsa='exa -aF'
     alias tree='exa -hTF --ignore-glob=".git"'
-  else
-    if [ -f ~/.colorrc ]; then
-      eval `dircolors ~/.colorrc`
+else 
+    if [[ $PLATFORM == osx ]]; then
+      if [ -x /usr/local/bin/gdircolors ]; then
+        if [ -f ~/.colorrc ]; then
+          eval `gdircolors ~/.colorrc`
+          alias ls='gls -F --color=auto'
+          alias lsa='gls -aF --color=auto'
+        else
+          echo "colorrc does not exist"
+          alias ls='gls -F --color=auto'
+          alias lsa='gls -aF --color=auto'
+        fi
+      else
+        echo "I recommend to install gdircolors and make colorrc"
+        alias ls='ls -FG'
+        alias lsa='ls -aFG'
+      fi
+    elif [[ $PLATFORM == linux ]]; then
+      if [ -f ~/.colorrc ]; then
+        eval `dircolors ~/.colorrc`
+      fi
+      alias ls='ls -F --color=auto'
+      alias lsa='ls -aF --color=auto'
+    else
+      echo "unknown platform"
     fi
-    alias ls='ls -F --color=auto'
-    alias lsa='ls -aF --color=auto'
-  fi
-else
-  echo "unknown platform"
 fi
 
 # cd
@@ -53,7 +53,11 @@ alias zmv='noglob zmv -W'
 alias g='git'
 
 # grep
-alias grep='grep --color'
+if has_cmd rg; then
+  alias grep='rg'
+else
+  alias grep='grep --color'
+fi
 
 # zshrc
 if has_cmd code; then
@@ -84,6 +88,7 @@ alias getpwd='pwd | c'
 # suffix
 alias -s py=python
 alias -s sh=bash
+alias -s html='open'
 
 function extract() {
   case $1 in
@@ -101,3 +106,13 @@ function extract() {
   esac
 }
 alias -s {gz,tgz,zip,lzh,bz2,tbz,Z,tar,arj,xz}=extract
+
+# global alias
+alias -g A='| awk'
+alias -g C='| c'
+alias -g W='| wc -w'
+alias -g G='| grep'
+alias -g H='| head'
+alias -g T='| tail'
+alias -g L='| less -R'
+alias -g X='| xargs'

@@ -1,5 +1,7 @@
 # README
 
+dotfiles of illumination-k
+
 ## Usage
 
 ### dotfiles
@@ -17,7 +19,8 @@ curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/bin/car
 
 ## Dependencies
 
-```curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/bin/dependencies_installer.sh | bash
+```
+curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/bin/dependencies_installer.sh | bash
 ```
 
 ### SHELL
@@ -42,18 +45,22 @@ curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/bin/car
 - docker
 - code
 - git
+- exa
+- rg
+- fd
+- bat
 
 #### mac
-- gls or exa
+- gls (if you do not have exa)
 - brew
 
 #### linux
 - xsel
-- exa
-- bat
 
 ## ROADMAP
 
 - [x] zcompile
-- [ ] add screen shot
-- [ ] CI
+- [ ] add screenshot
+- [ ] CI by github action
+- [ ] administrating by make
+- [ ] update dependencies installer
