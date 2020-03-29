@@ -68,7 +68,7 @@ curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/bin/dep
     - [x] install.sh
     - [ ] cargo_installer.sh
     - [ ] dependencies_installer.sh
-- [ ] administrating by make
+- [x] administrating by make
 - [ ] update dependencies installer
 
 ## License

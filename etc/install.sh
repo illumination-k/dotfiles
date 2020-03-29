@@ -12,7 +12,7 @@ elif type curl >/dev/null 2>&1 || type wget >/dev/null 2>&1; then
     mkdir -p $DOTPATH
     tarball="https://github.com/illumination-k/dotfiles/archive/master.tar.gz"
 
-    # どっちかでダウンロードして，tar に流す
+    # download by curl or wget
     if type curl >/dev/null 2>&1; then
         curl -L "$tarball"
 

@@ -1,4 +1,5 @@
 # install dependencies
+## starship
 if not_has_cmd starship; then        
     if has_cmd curl; then
         curl -fsSL https://starship.rs/install.sh | bash --yes
@@ -11,6 +12,7 @@ if not_has_cmd starship; then
     fi
 fi
 
+## peco
 if not_has_cmd peco; then
     if has_cmd apt; then
         apt install -y peco
