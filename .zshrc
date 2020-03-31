@@ -9,3 +9,8 @@ done
 if [ ! -f ~/.zshrc.zwc ] || [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
     zcompile ~/.zshrc
 fi
+
+if [ -f ~/.local_profile ]; then
+    source ~/.local_profile
+fi
+
