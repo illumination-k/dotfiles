@@ -1,1 +1,0 @@
-/home/illumination27/dotfiles/.tmux
