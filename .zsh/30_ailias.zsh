@@ -39,7 +39,7 @@ fi
 alias ..2='cd ../..'
 alias ..3='cd ../../..'
 alias h='cd ~'
-alias dot='cd ~/dotfiles'
+alias dotf='cd ~/dotfiles'
 
 # docker
 alias d='docker'
