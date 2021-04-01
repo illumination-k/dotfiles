@@ -34,33 +34,37 @@ if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]
     zstyle ':chpwd:*' recent-dirs-file "$HOME/.cache/chpwd-recent-dirs"
 fi
 
-# peco function and key binds
-function peco-history-selection() {
-    BUFFER=`history -n 1 | tac  | awk '!a[$0]++' | peco`
-    CURSOR=$#BUFFER
-    zle reset-prompt
-}
+if has_cmd peco; then
+    # peco function and key binds
+    function peco-history-selection() {
+        BUFFER=`history -n 1 | tac  | awk '!a[$0]++' | peco`
+        CURSOR=$#BUFFER
+        zle reset-prompt
+    }
 
-zle -N peco-history-selection
-bindkey '^R' peco-history-selection
+    zle -N peco-history-selection
+    bindkey '^R' peco-history-selection
 
-function peco-cdr () {
-    local selected_dir="$(cdr -l | sed 's/^[0-9]\+ \+//' | peco --prompt="cdr >" --query "$LBUFFER")"
-    if [ -n "$selected_dir" ]; then
-        BUFFER="cd ${selected_dir}"
-        zle accept-line
+    function peco-cdr () {
+        local selected_dir="$(cdr -l | sed 's/^[0-9]\+ \+//' | peco --prompt="cdr >" --query "$LBUFFER")"
+        if [ -n "$selected_dir" ]; then
+            BUFFER="cd ${selected_dir}"
+            zle accept-line
+        fi
+    }
+    zle -N peco-cdr
+    bindkey '^T' peco-cdr
+
+    if has_cmd ghq; then
+        function peco-ghq () {
+            local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
+            if [ -n "$selected_dir" ]; then
+                BUFFER="code ${selected_dir}"
+                zle accept-line
+            fi
+            zle clear-screen
+        }
+        zle -N peco-ghq
+        bindkey '^G' peco-ghq
     fi
-}
-zle -N peco-cdr
-bindkey '^T' peco-cdr
-
-function peco-ghq () {
-    local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
-    if [ -n "$selected_dir" ]; then
-        BUFFER="code ${selected_dir}"
-        zle accept-line
-    fi
-    zle clear-screen
-}
-zle -N peco-ghq
-bindkey '^G' peco-ghq
+fi
