@@ -12,7 +12,7 @@ if grep 'export PATH="$HOME/.cargo/bin:$PATH"' '.profile' >/dev/null; then
     echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> '.profile'
 fi
 
-libs=(exa bat ripgrep starship fd-find)
+libs=(exa bat ripgrep starship fd-find cargo-make cargo-readme)
 
 for lib in ${libs[@]}; do
     if !(type $lib > /dev/null 2>&1); then
