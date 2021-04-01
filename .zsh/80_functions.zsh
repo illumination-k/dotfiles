@@ -64,9 +64,9 @@ function is_repo_exist() {
 }
 
 function ghcr() {
-  if [ $(is_repo_exist $1) -eq 0 ]; then
-    echo -n "$1 is already exist"
-    exit 1
+  if [[ $(is_repo_exist $1) -eq 0 ]]; then
+    echo -n "$1 is already exist\n"
+    return 1
   fi
   gh repo create $*
   ghq get git@github.com:$(git config user.name)/$1.git
