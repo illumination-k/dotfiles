@@ -36,7 +36,7 @@ fi
 alias ..2='cd ../..'
 alias ..3='cd ../../..'
 alias h='cd ~'
-alias dot='cd ~/dotfiles'
+alias dotf='cd ~/dotfiles'
 
 # docker
 alias d='docker'
@@ -48,6 +48,10 @@ alias zmv='noglob zmv -W'
 
 # git
 alias g='git'
+
+# ghq
+alias gcd="cd $(ghq root)/$(ghq list | peco)"
+alias gcode="code $(ghq root)/$(ghq list | peco)"
 
 # grep
 if has_cmd rg; then
