@@ -1,8 +1,5 @@
 # Common aliases
 
-# ls
-os_detect
-
 if has_cmd exa; then
     alias ls='exa -F'
     alias lsa='exa -aF'

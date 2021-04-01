@@ -53,3 +53,14 @@ function peco-cdr () {
 }
 zle -N peco-cdr
 bindkey '^T' peco-cdr
+
+function peco-ghq () {
+    local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
+    if [ -n "$selected_dir" ]; then
+        BUFFER="code ${selected_dir}"
+        zle accept-line
+    fi
+    zle clear-screen
+}
+zle -N peco-ghq
+bindkey '^G' peco-ghq
