@@ -22,11 +22,11 @@ clean: ## Remove the dot files and this repo
 	-rm -rf $(DOTPATH)
 
 path: ## Show path in makefile
-	@echo "   DOTPATH  : $(DOTPATH)"
+	@echo " DOTPATH    : $(DOTPATH)"
 	@echo " CANDIDATES : $(CANDIDATES)"
 	@echo " EXCLUSIONS : $(EXCLUSIONS)"
 	@echo " DIRECTORY  : $(DIRECTORY)"
-	@echo "  DOTFILES  : $(DOTFILES)"
+	@echo " DOTFILES   : $(DOTFILES)"
 
 help: ## Self-documented Makefile
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
