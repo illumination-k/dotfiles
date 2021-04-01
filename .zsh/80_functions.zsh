@@ -49,7 +49,7 @@ function gcmi() {
   issue_num="#$(gh issue list | peco | col 1)"
 
   if [ $issue_num != "#" ]; then
-    echo "$1 (${issue_num})"
+    git commit -m "$1 (${issue_num})"
   fi
 }
 
@@ -68,6 +68,7 @@ function ghcr() {
     echo -n "$1 is already exist\n"
     return 1
   fi
+
   gh repo create $*
   ghq get git@github.com:$(git config user.name)/$1.git
 
