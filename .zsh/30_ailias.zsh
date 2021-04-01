@@ -53,6 +53,11 @@ alias g='git'
 alias gcd='cd $(ghq list -p | peco)'
 alias gcode='code $(ghq list -p | peco)'
 
+# gh
+
+# ghq + gh
+alias ghrw='gh repo view -w $(ghq list | peco)'
+
 # grep
 if has_cmd rg; then
   alias grep='rg'

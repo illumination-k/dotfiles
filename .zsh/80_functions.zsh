@@ -1,3 +1,5 @@
+# base
+
 # utils functions
 function mkcd() {
   if [[ -d $1 ]]; then
@@ -41,4 +43,45 @@ function rvcf() {
 function skip() {
     n=$(($1 + 1))
     cut -d' ' -f$n-
+}
+
+function gcmi() {
+  issue_num="#$(gh issue list | peco | col 1)"
+
+  if [ $issue_num != "#" ]; then
+    echo "$1 (${issue_num})"
+  fi
+}
+
+function is_repo_exist() {
+  repo_name="$(git config user.name)/$1"
+  repos=($(gh repo list | col 0))
+  if [[ $(printf '%s\n' "${repos[@]}" | grep -qx ${repo_name}; echo -n ${?} ) -eq 0 ]]; then
+      return 0
+  else
+      return 1
+  fi
+}
+
+function ghcr() {
+  if [ $(is_repo_exist $1) -eq 0 ]; then
+    echo -n "$1 is already exist"
+    exit 1
+  fi
+  gh repo create $*
+  ghq get git@github.com:$(git config user.name)/$1.git
+
+  repo_path=$(ghq list --full-path -e $1)
+  cur_path=$(pwd)
+
+  touch "${repo_path}/.gitignore"
+  touch "${repo_path}/README.md"
+  git add .
+  git commit -m "first commit"
+  git checkout -b dev
+  if has_cmd code; then
+    code $repo_path
+  else
+    cd $repo_path
+  fi
 }
