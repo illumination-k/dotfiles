@@ -60,7 +60,11 @@ if has_cmd peco; then
         function peco-ghq () {
             local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
             if [ -n "$selected_dir" ]; then
-                BUFFER="code ${selected_dir}"
+                if has_cmd code; then
+                    BUFFER="code ${selected_dir}"
+                else
+                    BUFFER="cd ${selected_dir}"
+                fi
                 zle accept-line
             fi
             zle clear-screen
