@@ -50,8 +50,13 @@ alias zmv='noglob zmv -W'
 alias g='git'
 
 # ghq
-alias gcd="cd $(ghq root)/$(ghq list | peco)"
-alias gcode="code $(ghq root)/$(ghq list | peco)"
+alias gcd='cd $(ghq list -p | peco)'
+alias gcode='code $(ghq list -p | peco)'
+
+# gh
+
+# ghq + gh
+alias ghrw='gh repo view -w $(ghq list | peco)'
 
 # grep
 if has_cmd rg; then

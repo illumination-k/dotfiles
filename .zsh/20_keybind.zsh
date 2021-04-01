@@ -45,6 +45,7 @@ if has_cmd peco; then
     zle -N peco-history-selection
     bindkey '^R' peco-history-selection
 
+    # 移動履歴を参照して移動
     function peco-cdr () {
         local selected_dir="$(cdr -l | sed 's/^[0-9]\+ \+//' | peco --prompt="cdr >" --query "$LBUFFER")"
         if [ -n "$selected_dir" ]; then
@@ -53,18 +54,22 @@ if has_cmd peco; then
         fi
     }
     zle -N peco-cdr
-    bindkey '^T' peco-cdr
+    bindkey '^t' peco-cdr
 
     if has_cmd ghq; then
         function peco-ghq () {
             local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
             if [ -n "$selected_dir" ]; then
-                BUFFER="code ${selected_dir}"
+                if has_cmd code; then
+                    BUFFER="code ${selected_dir}"
+                else
+                    BUFFER="cd ${selected_dir}"
+                fi
                 zle accept-line
             fi
             zle clear-screen
         }
         zle -N peco-ghq
-        bindkey '^G' peco-ghq
+        bindkey '^[g' peco-ghq
     fi
 fi
