@@ -77,12 +77,12 @@ function ghcr() {
 
   touch "${repo_path}/.gitignore"
   touch "${repo_path}/README.md"
+  ce $repo_path
   git add .
   git commit -m "first commit"
   git checkout -b dev
   if has_cmd code; then
     code $repo_path
-  else
-    cd $repo_path
+    cd $cur_path
   fi
 }

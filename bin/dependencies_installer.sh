@@ -1,14 +1,16 @@
 # install dependencies
 ## starship
-if not_has_cmd starship; then        
-    if has_cmd curl; then
+if not_has_cmd starship; then
+    if has_cmd cargo; then
+        cargo install starship        
+    elif has_cmd curl; then
         curl -fsSL https://starship.rs/install.sh | bash --yes
     elif has_cmd wget; then
         wget https://starship.rs/install.sh 
         bash install.sh --yes
         rm -f install.sh
     else
-        echo "curl or wget required to install starship"
+        echo "cargo, curl or wget required to install starship"
     fi
 fi
 
