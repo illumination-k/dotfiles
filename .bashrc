@@ -1,3 +1,5 @@
+[ -z "$PS1" ] && return
+
 ##### History #####
 # historyコマンドでの実行日時の記録
 HISTTIMEFORMAT='%y/%m/%d %H:%M:%S '
