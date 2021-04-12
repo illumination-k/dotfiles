@@ -9,3 +9,5 @@ else
     die "curl required"
 fi
 
+
+libs=(zsh peco git)

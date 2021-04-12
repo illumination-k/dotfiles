@@ -1,8 +1,5 @@
 # Common aliases
 
-# ls
-os_detect
-
 if has_cmd exa; then
     alias ls='exa -F'
     alias lsa='exa -aF'
@@ -39,7 +36,7 @@ fi
 alias ..2='cd ../..'
 alias ..3='cd ../../..'
 alias h='cd ~'
-alias dot='cd ~/dotfiles'
+alias dotf='cd ~/dotfiles'
 
 # docker
 alias d='docker'
@@ -51,6 +48,15 @@ alias zmv='noglob zmv -W'
 
 # git
 alias g='git'
+
+# ghq
+alias gcd='cd $(ghq list -p | peco)'
+alias gcode='code $(ghq list -p | peco)'
+
+# gh
+
+# ghq + gh
+alias ghrw='gh repo view -w $(ghq list | peco)'
 
 # grep
 if has_cmd rg; then
