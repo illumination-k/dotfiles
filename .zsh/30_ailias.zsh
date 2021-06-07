@@ -1,8 +1,5 @@
 # Common aliases
 
-# ls
-os_detect
-
 if has_cmd exa; then
     alias ls='exa -F'
     alias lsa='exa -aF'
@@ -53,10 +50,20 @@ alias zmv='noglob zmv -W'
 alias g='git'
 
 # ghq
+<<<<<<< HEAD
 if has_cmd gqh; then
   alias gcd="cd $(ghq root)/$(ghq list | peco)"
   alias gcode="code $(ghq root)/$(ghq list | peco)"
 fi
+=======
+alias gcd='cd $(ghq list -p | peco)'
+alias gcode='code $(ghq list -p | peco)'
+
+# gh
+
+# ghq + gh
+alias ghrw='gh repo view -w $(ghq list | peco)'
+>>>>>>> 302df5a18c207216b1858c08057f6d22efb93498
 
 # grep
 if has_cmd rg; then

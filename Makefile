@@ -1,12 +1,14 @@
 DOTPATH    := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES := $(wildcard .??*)
 EXCLUSIONS := .DS_Store .git .gitignore .github
-DOTFILES   := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
+DIRECTORY  := .zsh
+DOTFILES   := $(filter-out $(EXCLUSIONS) $(DIRECTORY), $(CANDIDATES))
 
 deploy: ## Create symlink to home directory 
 	@echo "==> Start to deploy dotfiles to home directory"
 	@echo ""
 	@$(foreach val, $(DOTFILES), ln -sfv $(abspath $(val)) $(HOME)/$(val);)
+	@$(foreach val, $(DIRECTORY), ln -sfvn $(abspath $(val)) $(HOME)/$(val);)
 
 list: ## Show dot files in this repoy
 	@$(foreach val, $(DOTFILES), /bin/ls -dF $(val);)
@@ -20,10 +22,11 @@ clean: ## Remove the dot files and this repo
 	-rm -rf $(DOTPATH)
 
 path: ## Show path in makefile
-	@echo $(DOTPATH)
-	@echo $(CANDIDATES)
-	@echo $(EXCLUSIONS)
-	@echo $(DOTFILES)
+	@echo "   DOTPATH  : $(DOTPATH)"
+	@echo " CANDIDATES : $(CANDIDATES)"
+	@echo " EXCLUSIONS : $(EXCLUSIONS)"
+	@echo " DIRECTORY  : $(DIRECTORY)"
+	@echo "  DOTFILES  : $(DOTFILES)"
 
 help: ## Self-documented Makefile
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \

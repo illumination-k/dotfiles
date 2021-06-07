@@ -22,3 +22,7 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 ## 区切り文字を指定
 zstyle ':zle:*' word-chars " _-./;@"
 zstyle ':zle:*' word-style unspecified
+
+if has_cmd gh; then
+    eval "$(gh completion -s zsh)"
+fi
