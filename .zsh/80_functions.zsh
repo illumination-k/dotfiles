@@ -88,6 +88,5 @@ function ghcr() {
   git checkout -b dev
   if has_cmd code; then
     code $repo_path
-    cd $cur_path
   fi
 }

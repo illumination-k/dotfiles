@@ -1,14 +1,20 @@
 DOTPATH    := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES := $(wildcard .??*)
-EXCLUSIONS := .DS_Store .git .gitignore .github
+EXCLUSIONS := .DS_Store .git .gitignore .github .bashrc
 DIRECTORY  := .zsh
 DOTFILES   := $(filter-out $(EXCLUSIONS) $(DIRECTORY), $(CANDIDATES))
 
-deploy: ## Create symlink to home directory 
+deploy: ## Create symlink to home directory (NOT deploy bashrc)
 	@echo "==> Start to deploy dotfiles to home directory"
+	@echo "CAUTION: This command NOT deploy bashrc"
 	@echo ""
 	@$(foreach val, $(DOTFILES), ln -sfv $(abspath $(val)) $(HOME)/$(val);)
 	@$(foreach val, $(DIRECTORY), ln -sfvn $(abspath $(val)) $(HOME)/$(val);)
+
+bashrc: ## deploy bashrc
+	@echo "==> deploy bashrc"
+	@echo ""
+	@ln -sfv $(abspath .bashrc) ${HOME}/.bashrc
 
 list: ## Show dot files in this repoy
 	@$(foreach val, $(DOTFILES), /bin/ls -dF $(val);)
