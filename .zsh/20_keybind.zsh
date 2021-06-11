@@ -1,6 +1,6 @@
-# vim keybind
-bindkey -v
-bindkey "jj" vi-cmd-mode
+# default bind-ky
+bindkey ";5C" forward-word
+bindkey ";5D" backward-word
 
 autoload -Uz is-at-least
 if is-at-least 5.0.8; then
@@ -23,6 +23,14 @@ if is-at-least 5.0.8; then
     bindkey -a ys add-surround
     bindkey -M visual S add-surround
 fi
+
+# default bind-ky
+bindkey "^A" beginning-of-line
+bindkey "^B" backward-char
+bindkey "^E" end-of-line
+bindkey ";5C" forward-word
+bindkey ";5D" backward-word
+
 
 # cdr
 if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
