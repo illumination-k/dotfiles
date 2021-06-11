@@ -45,21 +45,26 @@ function skip() {
     cut -d' ' -f$n-
 }
 
-function gcmi() {
+function gcmi_msg() {
   issue_num="#$(gh issue list | peco | col 1)"
-
   if [ $issue_num != "#" ]; then
-    git commit -m "$1 (${issue_num})"
+    echo " (${issue_num})"
+  else
+    echo ""
   fi
+}
+
+function gcmi() {
+  git commit -m "$1 $(gcmi_msg)"
 }
 
 function is_repo_exist() {
   repo_name="$(git config user.name)/$1"
   repos=($(gh repo list | col 0))
   if [[ $(printf '%s\n' "${repos[@]}" | grep -qx ${repo_name}; echo -n ${?} ) -eq 0 ]]; then
-      return 0
+      echo 0
   else
-      return 1
+      echo 1
   fi
 }
 
@@ -77,7 +82,7 @@ function ghcr() {
 
   touch "${repo_path}/.gitignore"
   touch "${repo_path}/README.md"
-  ce $repo_path
+  cd $repo_path
   git add .
   git commit -m "first commit"
   git checkout -b dev
