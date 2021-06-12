@@ -30,8 +30,6 @@ os_detect() {
     esac
 }
 
-os_detect
-
 if [[ $PLATFORM == osx ]]; then
   if [ -x /usr/local/bin/gdircolors ]; then
     if [ -f ~/.colorrc ]; then
@@ -55,10 +53,14 @@ elif [[ $PLATFORM == linux ]]; then
   alias ls='ls -F --color=auto'
   alias lsa='ls -aF --color=auto'
 else
-  echo "unknown platform"
+  if [ -f ~/.colorrc ]; then
+    eval `dircolors ~/.colorrc`
+  fi
+  alias ls='ls -F --color=auto'
+  alias lsa='ls -aF --color=auto'
 fi
 
-alias ldrun='docker run --rm -v `pwd`:/local_volume'
+alias ldrun='docker run --rm -v $(pwd):/local_volume'
 
 function mkcd() {
   if [[ -d $1 ]]; then

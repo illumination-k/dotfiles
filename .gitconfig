@@ -15,6 +15,8 @@
 	cm = commit -m
 	puom = push -u origin master
 	graph = log --graph --date-order --all --pretty=format:'%h %Cred%d %Cgreen%ad %Cblue%cn %Creset%s' --date=short
+	root = ! git rev-parse --show-superproject-working-tree --show-toplevel | grep "^/"
+	aliases = config --get-regexp alias
 [github]
 	user = illumination-k
 [credential]
