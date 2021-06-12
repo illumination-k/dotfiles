@@ -12,7 +12,11 @@
 [alias]
 	st = status
 	aa = add .
-	cm = commit -m
+	ps = push
+	pl = pull
+	cm = commit
+	cmm = commit -m
+	issues = !gh issue list | cat
 	puom = push -u origin master
 	graph = log --graph --date-order --all --pretty=format:'%h %Cred%d %Cgreen%ad %Cblue%cn %Creset%s' --date=short
 	root = ! git rev-parse --show-superproject-working-tree --show-toplevel | grep "^/"
