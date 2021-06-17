@@ -17,6 +17,8 @@ if [ ! -f ~/.zshrc.zwc ] || [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
 fi
 
 # load repository profile
-if [ -f $(git root)/.reporc ]; then
-    source $(git root)/.reporc
+if [ -d ./.git ]; then
+    if [ -f $(git root)/.reporc ]; then
+        source $(git root)/.reporc
+    fi
 fi
