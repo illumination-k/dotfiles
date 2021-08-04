@@ -74,3 +74,13 @@ get_os() {
         fi
     done
 }
+
+fuzzy_search() {
+    if has_cmd sk; then
+        sk
+    elif has_cmd peco; then
+        peco
+    else
+        exit 1
+    fi
+}

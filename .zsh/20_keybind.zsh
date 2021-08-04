@@ -58,7 +58,7 @@ if has_cmd peco; then
 
     if has_cmd ghq; then
         function peco-ghq () {
-            local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
+            local selected_dir=$(ghq list -p | fuzzy_search)
             if [ -n "$selected_dir" ]; then
                 if has_cmd code; then
                     BUFFER="code ${selected_dir}"

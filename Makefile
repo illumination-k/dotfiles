@@ -1,6 +1,6 @@
 DOTPATH    := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES := $(wildcard .??*)
-EXCLUSIONS := .DS_Store .git .gitignore .github .bashrc
+EXCLUSIONS := .DS_Store .git .gitignore .github .bashrc .reporc
 DIRECTORY  := .zsh
 DOTFILES   := $(filter-out $(EXCLUSIONS) $(DIRECTORY), $(CANDIDATES))
 

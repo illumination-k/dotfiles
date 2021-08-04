@@ -10,4 +10,4 @@ else
 fi
 
 
-libs=(zsh peco git)
+libs=(zsh git)

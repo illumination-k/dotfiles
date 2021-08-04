@@ -8,11 +8,13 @@ if !(type "cargo" > /dev/null 2>&1); then
     fi
 fi
 
-if grep 'export PATH="$HOME/.cargo/bin:$PATH"' '.profile' >/dev/null; then
-    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> '.profile'
+touch ~/.local_profile
+
+if grep 'export PATH="$HOME/.cargo/bin:$PATH"' '~/.local_profile' >/dev/null; then
+    echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> '~/.local_profile'
 fi
 
-libs=(exa bat ripgrep starship fd-find cargo-make cargo-readme)
+libs=(exa bat ripgrep fd-find cargo-make cargo-readme skim git-delta)
 
 for lib in ${libs[@]}; do
     if !(type $lib > /dev/null 2>&1); then
