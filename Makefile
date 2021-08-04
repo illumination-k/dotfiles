@@ -34,6 +34,11 @@ path: ## Show path in makefile
 	@echo " DIRECTORY  : $(DIRECTORY)"
 	@echo " DOTFILES   : $(DOTFILES)"
 
+init-brew: ## init brew with Brewfile
+	@echo "Initialize brewfile from ~/dotfiles/Brewfile"
+	@bash ./bin/brew_installer.sh
+	@brew bundle
+
 help: ## Self-documented Makefile
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| sort \

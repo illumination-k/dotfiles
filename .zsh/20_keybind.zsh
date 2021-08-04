@@ -34,42 +34,41 @@ if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]
     zstyle ':chpwd:*' recent-dirs-file "$HOME/.cache/chpwd-recent-dirs"
 fi
 
-if has_cmd peco; then
-    # peco function and key binds
-    function peco-history-selection() {
-        BUFFER=`history -n 1 | tac  | awk '!a[$0]++' | peco`
-        CURSOR=$#BUFFER
-        zle reset-prompt
-    }
 
-    zle -N peco-history-selection
-    bindkey '^R' peco-history-selection
+# peco function and key binds
+function fuzzy-history-selection() {
+    BUFFER=`history -n 1 | tac  | awk '!a[$0]++' | fuzzy_search`
+    CURSOR=$#BUFFER
+    zle reset-prompt
+}
 
-    # 移動履歴を参照して移動
-    function peco-cdr () {
-        local selected_dir="$(cdr -l | sed 's/^[0-9]\+ \+//' | peco --prompt="cdr >" --query "$LBUFFER")"
+zle -N fuzzy-history-selection
+bindkey '^R' fuzzy-history-selection
+
+# 移動履歴を参照して移動
+function fuzzy-cdr () {
+    local selected_dir="$(cdr -l | sed 's/^[0-9]\+ \+//' | fuzzy_search)"
+    if [ -n "$selected_dir" ]; then
+        BUFFER="cd ${selected_dir}"
+        zle accept-line
+    fi
+}
+zle -N fuzzy-cdr
+bindkey '^t' fuzzy-cdr
+
+if has_cmd ghq; then
+    function fuzzy-ghq () {
+        local selected_dir=$(ghq list -p | fuzzy_search)
         if [ -n "$selected_dir" ]; then
-            BUFFER="cd ${selected_dir}"
+            if has_cmd code; then
+                BUFFER="code ${selected_dir}"
+            else
+                BUFFER="cd ${selected_dir}"
+            fi
             zle accept-line
         fi
+        zle clear-screen
     }
-    zle -N peco-cdr
-    bindkey '^t' peco-cdr
-
-    if has_cmd ghq; then
-        function peco-ghq () {
-            local selected_dir=$(ghq list -p | fuzzy_search)
-            if [ -n "$selected_dir" ]; then
-                if has_cmd code; then
-                    BUFFER="code ${selected_dir}"
-                else
-                    BUFFER="cd ${selected_dir}"
-                fi
-                zle accept-line
-            fi
-            zle clear-screen
-        }
-        zle -N peco-ghq
-        bindkey '^[g' peco-ghq
-    fi
+    zle -N fuzzy-ghq
+    bindkey '^[g' fuzzy-ghq
 fi
