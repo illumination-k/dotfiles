@@ -28,7 +28,7 @@ else
       alias ls='ls -F --color=auto'
       alias lsa='ls -aF --color=auto'
     else
-      echo "unknown platform"
+      echo "unknown platform. Cannot set ls alias"
     fi
 fi
 
@@ -80,10 +80,14 @@ if [[ $PLATFORM == osx ]]; then
 elif [[ $(uname -r | cut -f 3 -d "-") == "Microsoft" ]]; then
   alias c='clip.exe'
 elif [[ $PLATFORM == linux ]]; then
-  if has_cmd xsel; then
-    alias c='xsel --clipboard --input'
+  if [[ $(uname -r) == *'microsoft'* ]]; then
+    alias c='clip.exe'
   else
-    echo "please install xsel to use c alias"
+    if has_cmd xsel; then
+      alias c='xsel --clipboard --input'
+    else
+      echo "please install xsel to use c alias"
+    fi
   fi
 else
   echo "Unknown platform"
