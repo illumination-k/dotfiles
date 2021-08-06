@@ -17,7 +17,10 @@ bashrc: ## deploy bashrc
 	@ln -sfv $(abspath .bashrc) ${HOME}/.bashrc
 
 list: ## Show dot files in this repo
+	@echo "=== dotfiles ==="
 	@$(foreach val, $(DOTFILES), /bin/ls -dF $(val);)
+	@echo "=== dotdirectory ==="
+	@$(foreach val, $(DIRECTORY), echo --- $(val) ---; /bin/ls $(val);)
 
 exclude: ## Show ignore file when deploying
 	@echo $(EXCLUSIONS)
