@@ -16,7 +16,7 @@ bashrc: ## deploy bashrc
 	@echo ""
 	@ln -sfv $(abspath .bashrc) ${HOME}/.bashrc
 
-list: ## Show dot files in this repoy
+list: ## Show dot files in this repo
 	@$(foreach val, $(DOTFILES), /bin/ls -dF $(val);)
 
 exclude: ## Show ignore file when deploying

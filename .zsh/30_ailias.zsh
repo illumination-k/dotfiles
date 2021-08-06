@@ -50,13 +50,13 @@ alias zmv='noglob zmv -W'
 alias g='git'
 
 # ghq
-alias gcd='cd $(ghq list -p | peco)'
-alias gcode='code $(ghq list -p | peco)'
+alias gcd='cd $(ghq list -p | fuzzy_search)'
+alias gcode='code $(ghq list -p | fuzzy_search)'
 
 # gh
 
 # ghq + gh
-alias ghrw='gh repo view -w $(ghq list | peco)'
+alias ghrw='gh repo view -w $(ghq list | fuzzy_search)'
 
 # grep
 if has_cmd rg; then

@@ -47,7 +47,7 @@ function skip() {
 
 function gcmi_msg() {
   local -a issue_num
-  issue_num="#$(gh issue list | peco | col 1)"
+  issue_num="#$(gh issue list | fuzzy_search | col 1)"
   if [ $issue_num != "#" ]; then
     echo " (${issue_num})"
   else

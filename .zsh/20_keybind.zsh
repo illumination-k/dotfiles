@@ -1,6 +1,6 @@
-# vim keybind
-bindkey -v
-bindkey "jj" vi-cmd-mode
+# default bind-ky
+bindkey ";5C" forward-word
+bindkey ";5D" backward-word
 
 autoload -Uz is-at-least
 if is-at-least 5.0.8; then

@@ -19,6 +19,7 @@ else
             /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         else
             die '/usr/bin/rudy required. if you want to use other ruby, please run `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`'
+        fi
     else
         die "curl required"
     fi

@@ -14,4 +14,4 @@ _make() {
     _values 'tasks' $tasks
 }
 
-compdef _make makers
+compdef _make make
