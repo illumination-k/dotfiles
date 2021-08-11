@@ -1,8 +1,5 @@
 # Common aliases
 
-# ls
-os_detect
-
 if has_cmd exa; then
     alias ls='exa -F'
     alias lsa='exa -aF'
@@ -31,7 +28,7 @@ else
       alias ls='ls -F --color=auto'
       alias lsa='ls -aF --color=auto'
     else
-      echo "unknown platform"
+      echo "unknown platform. Cannot set ls alias"
     fi
 fi
 
@@ -39,7 +36,7 @@ fi
 alias ..2='cd ../..'
 alias ..3='cd ../../..'
 alias h='cd ~'
-alias dot='cd ~/dotfiles'
+alias dotf='cd ~/dotfiles'
 
 # docker
 alias d='docker'
@@ -53,8 +50,13 @@ alias zmv='noglob zmv -W'
 alias g='git'
 
 # ghq
-# alias gcd="cd $(ghq root)/$(ghq list | peco)"
-# alias gcode="code $(ghq root)/$(ghq list | peco)"
+alias gcd='cd $(ghq list -p | fuzzy_search)'
+alias gcode='code $(ghq list -p | fuzzy_search)'
+
+# gh
+
+# ghq + gh
+alias ghrw='gh repo view -w $(ghq list | fuzzy_search)'
 
 # grep
 if has_cmd rg; then
@@ -78,10 +80,14 @@ if [[ $PLATFORM == osx ]]; then
 elif [[ $(uname -r | cut -f 3 -d "-") == "Microsoft" ]]; then
   alias c='clip.exe'
 elif [[ $PLATFORM == linux ]]; then
-  if has_cmd xsel; then
-    alias c='xsel --clipboard --input'
+  if [[ $(uname -r) == *'microsoft'* ]]; then
+    alias c='clip.exe'
   else
-    echo "please install xsel to use c alias"
+    if has_cmd xsel; then
+      alias c='xsel --clipboard --input'
+    else
+      echo "please install xsel to use c alias"
+    fi
   fi
 else
   echo "Unknown platform"

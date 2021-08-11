@@ -1,0 +1,17 @@
+_make() {
+    local -a tasks
+    tasks=(\
+        "bashrc[deploy bashrc]"\
+        "clean[Remove the dot files and this repo]"\
+        "deploy[Create symlink to home directory (NOT deploy bashrc)]"\
+        "exclude[Show ignore file when deploying]"\
+        "help[Self-documented Makefile]"\
+        "init-brew[init brew with Brewfile]"\
+        "list[Show dot files in this repoy]"\
+        "path[Show path in makefile]"\
+    )
+
+    _values 'tasks' $tasks
+}
+
+compdef _make make

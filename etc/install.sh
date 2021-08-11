@@ -34,10 +34,14 @@ if [ $? -ne 0 ]; then
 fi
 
 # 移動できたらリンクを実行する
-for f in .??*; do
-    [[ "$f" = ".git" ]] && continue
-    [[ "$f" == ".DS_Store" ]] && continue
-    [[ "$f" == ".gitignore" ]] && continue
-    [[ "$f" == ".github" ]] && continue
-    ln -sfv "$DOTPATH/$f" "$HOME/$f"
-done
+if type make>/dev/null 2>&1; then
+    make deploy
+else
+    for f in .??*; do
+        [[ "$f" = ".git" ]] && continue
+        [[ "$f" == ".DS_Store" ]] && continue
+        [[ "$f" == ".gitignore" ]] && continue
+        [[ "$f" == ".github" ]] && continue
+        ln -sfv "$DOTPATH/$f" "$HOME/$f"
+    done
+fi

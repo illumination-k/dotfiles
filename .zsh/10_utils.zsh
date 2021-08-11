@@ -14,6 +14,7 @@ not_has_cmd() {
         return 0
     fi
 }
+
 # ostype returns the lowercase OS name
 ostype() {
     echo ${(L):-$(uname)}
@@ -29,6 +30,9 @@ os_detect() {
         *)          PLATFORM='unknown' ;;
     esac
 }
+
+# set $PLATFORM
+os_detect
 
 # is_osx returns true if running OS is Macintosh
 is_osx() {
@@ -69,4 +73,14 @@ get_os() {
             echo $os
         fi
     done
+}
+
+fuzzy_search() {
+    if has_cmd sk; then
+        sk
+    elif has_cmd peco; then
+        peco
+    else
+        exit 1
+    fi
 }
