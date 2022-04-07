@@ -13,8 +13,9 @@
 	st = status
 	aa = add .
 	ps = push
+	psh = push origin HEAD
 	pl = pull
-	plh = pull HEAD
+	plh = pull origin HEAD
 	cm = commit
 	cmm = commit -m
 	issues = !gh issue list | cat
