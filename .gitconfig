@@ -14,13 +14,15 @@
 	aa = add .
 	ps = push
 	pl = pull
+	plh = pull HEAD
 	cm = commit
 	cmm = commit -m
 	issues = !gh issue list | cat
 	graph = log --graph --date-order --all --pretty=format:'%h %Cred%d %Cgreen%ad %Cblue%cn %Creset%s' --date=short
 	root = ! git rev-parse --show-superproject-working-tree --show-toplevel | grep "^/"
 	aliases = config --get-regexp alias
+	default = ! basename $(git symbolic-ref --short refs/remotes/origin/HEAD)
+	ret-default = ! git checkout $(git default) && git pull origin HEAD
 [github]
 	user = illumination-k
 [credential]
-	helper = cache --timeout=86400
