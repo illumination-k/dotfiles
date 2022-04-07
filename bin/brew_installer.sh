@@ -24,3 +24,5 @@ else
         die "curl required"
     fi
 fi
+
+brew bundle
