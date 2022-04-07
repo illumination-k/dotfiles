@@ -36,8 +36,5 @@ jobs:
       - name: dependencies installer
         run: bash ${{ matrix.dependencies_installer }}
 
-      - name: deploy
-        run: make deploy
-
       - name: load
         run: zsh -c 'source ~/.zshrc'
