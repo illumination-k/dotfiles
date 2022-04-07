@@ -19,6 +19,6 @@ brew "wget"
 brew "zplug"
 brew "zsh"
 cask "docker"
-mas "Skitch", id: 425955336
-mas "Slack", id: 803453959
-mas "Xcode", id: 497799835
+# mas "Skitch", id: 425955336
+# mas "Slack", id: 803453959
+# mas "Xcode", id: 497799835

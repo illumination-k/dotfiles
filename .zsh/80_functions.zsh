@@ -40,9 +40,16 @@ function rvcf() {
   zcat $1 | grep -v "#" | column -t | less -S
 }
 
+function skip-rows() {
+  local n=$(($1 + 1))
+
+  cut -d$'\n' -f$n-
+}
+
 function skip() {
-    n=$(($1 + 1))
-    cut -d' ' -f$n-
+  local n=$(($1 + 1))
+
+  cut -d$' ' -f$n-
 }
 
 function gcmi_msg() {
@@ -86,7 +93,7 @@ function ghcr() {
   cd $repo_path
   git add .
   git commit -m "first commit"
-  git checkout -b dev
+
   if has_cmd code; then
     code $repo_path
   fi

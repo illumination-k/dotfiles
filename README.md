@@ -1,6 +1,6 @@
 # README
 
-dotfiles of illumination-k
+dotfiles maintained by `illumination-k`
 
 ![terminal](doc/terminal.PNG)
 
@@ -19,17 +19,15 @@ curl -L https://raw.githubuercontent.com/illumination-k/dotfiles/master/bin/carg
 ```
 
 
-## ROADMAP
+### install dependencies
 
-- [x] zcompile
-- [x] add screenshot
-- [ ] CI by github action
-    - [ ] multi platform
-    - [x] install.sh
-    - [ ] cargo_installer.sh
-    - [ ] dependencies_installer.sh
-- [x] administrating by make
-- [ ] update dependencies installer
+```bash 
+# mac
+curl -L https://raw.githubuercontent.com/illumination-k/dotfiles/master/bin/brew_installer.sh | bash
+
+# linux
+curl -L https://raw.githubuercontent.com/illumination-k/dotfiles/master/bin/linux_apt_installer.sh | bash
+```
 
 ## License
 MIT
