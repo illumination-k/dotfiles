@@ -1,6 +1,6 @@
 # README
 
-dotfiles of illumination-k
+dotfiles maintained by `illumination-k`
 
 ![terminal](doc/terminal.PNG)
 
@@ -16,6 +16,17 @@ curl -L https://raw.githubusercontent.com/illumination-k/dotfiles/master/etc/ins
 
 ```bash
 curl -L https://raw.githubuercontent.com/illumination-k/dotfiles/master/bin/cargo_installer.sh | bash
+```
+
+
+### install dependencies
+
+```bash 
+# mac
+curl -L https://raw.githubuercontent.com/illumination-k/dotfiles/master/bin/brew_installer.sh | bash
+
+# linux
+curl -L https://raw.githubuercontent.com/illumination-k/dotfiles/master/bin/linux_apt_installer.sh | bash
 ```
 
 ## License

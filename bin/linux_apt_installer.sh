@@ -10,7 +10,7 @@ if !(type "starship" > /dev/null 2>&1); then
     elif (type "cargo" > /dev/null 2>&1); then
         cargo install starship  
     else
-        echo "cargo, curl or wget required to install starship"
+        echo "cargo, curl or wget are required to install starship"
     fi
 fi
 
