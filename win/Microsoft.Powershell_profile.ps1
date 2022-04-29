@@ -13,8 +13,11 @@ fnm env --use-on-cd | Out-String | Invoke-Expression
 # Starship
 Invoke-Expression (&starship init powershell)
 
-# autosuggest
-Set-PSReadLineOption -PredictionSource History
-
 # remove duplicates from history
 Set-PSReadlineOption -HistoryNoDuplicates
+
+Set-PSReadLineKeyHandler -Key "alt+r" -BriefDescription "reloadPROFILE" -LongDescription "reloadPROFILE" -ScriptBlock {
+    [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
+    [Microsoft.PowerShell.PSConsoleReadLine]::Insert('<#SKIPHISTORY#> . $PROFILE')
+    [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
+}
