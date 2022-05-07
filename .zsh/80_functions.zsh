@@ -98,3 +98,11 @@ function ghcr() {
     code $repo_path
   fi
 }
+
+function vsclippy() {
+  if [ -f ".vscode/settings.json" ]; then
+    cargo clippy --features $(cat .vscode/settings.json | jq -r '."rust-analyzer.cargo.features" | join(",")')
+  else
+    cargo clippy ${@}
+  fi
+}
