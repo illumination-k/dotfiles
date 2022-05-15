@@ -81,3 +81,7 @@ if type starship >/dev/null 2>&1; then
     export STARSHIP_CONFIG=$HOME/.starship.toml
     eval "$(starship init bash)"
 fi
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
