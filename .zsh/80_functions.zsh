@@ -106,3 +106,11 @@ function vsclippy() {
     cargo clippy ${@}
   fi
 }
+
+function fdate() {
+  date "+%Y%m%d"
+}
+
+function fdatetime() {
+  date "+%Y%m%d-%H%M%S"
+}
