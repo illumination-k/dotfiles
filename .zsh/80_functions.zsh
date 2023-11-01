@@ -114,3 +114,7 @@ function fdate() {
 function fdatetime() {
   date "+%Y%m%d-%H%M%S"
 }
+
+function wlocalprof() {
+  echo "$@" >> ~/.local_profile
+}
