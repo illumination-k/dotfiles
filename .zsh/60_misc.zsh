@@ -24,5 +24,5 @@ zstyle ':zle:*' word-chars " _-./;@"
 zstyle ':zle:*' word-style unspecified
 
 if has_cmd gh; then
-    eval "$(gh completion -s zsh)"
+	eval "$(gh completion -s zsh)"
 fi

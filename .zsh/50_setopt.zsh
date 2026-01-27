@@ -16,11 +16,10 @@ setopt no_flow_control
 setopt auto_cd
 # correct commands
 setopt correct
-# remove trailing spaces after completion if needed 
+# remove trailing spaces after completion if needed
 setopt auto_param_keys
 
 # No Beep
 setopt no_beep
 setopt no_list_beep
 setopt no_hist_beep
-

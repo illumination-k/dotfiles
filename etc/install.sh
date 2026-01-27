@@ -5,43 +5,43 @@ GITHUB_URL="https://github.com/illumination-k/dotfiles.git"
 
 # git が使えるなら git
 if type git >/dev/null 2>&1; then
-    git clone --recursive "$GITHUB_URL" "$DOTPATH"
+	git clone --recursive "$GITHUB_URL" "$DOTPATH"
 
 # 使えない場合は curl か wget を使用する
 elif type curl >/dev/null 2>&1 || type wget >/dev/null 2>&1; then
-    mkdir -p $DOTPATH
-    tarball="https://github.com/illumination-k/dotfiles/archive/master.tar.gz"
+	mkdir -p $DOTPATH
+	tarball="https://github.com/illumination-k/dotfiles/archive/master.tar.gz"
 
-    # download by curl or wget
-    if type curl >/dev/null 2>&1; then
-        curl -L "$tarball"
+	# download by curl or wget
+	if type curl >/dev/null 2>&1; then
+		curl -L "$tarball"
 
-    elif type wget >/dev/null 2>&1; then
-        wget -O - "$tarball"
+	elif type wget >/dev/null 2>&1; then
+		wget -O - "$tarball"
 
-    fi | tar zxv
+	fi | tar zxv
 
-    # 解凍したら，DOTPATH に置く
-    mv -f dotfiles-master "$DOTPATH"
+	# 解凍したら，DOTPATH に置く
+	mv -f dotfiles-master "$DOTPATH"
 
 else
-    die "curl or wget required"
+	die "curl or wget required"
 fi
 
-cd $DOTPATH 
+cd $DOTPATH
 if [ $? -ne 0 ]; then
-    die "not found: $DOTPATH"
+	die "not found: $DOTPATH"
 fi
 
 # 移動できたらリンクを実行する
-if type make>/dev/null 2>&1; then
-    make deploy
+if type make >/dev/null 2>&1; then
+	make deploy
 else
-    for f in .??*; do
-        [[ "$f" = ".git" ]] && continue
-        [[ "$f" == ".DS_Store" ]] && continue
-        [[ "$f" == ".gitignore" ]] && continue
-        [[ "$f" == ".github" ]] && continue
-        ln -sfv "$DOTPATH/$f" "$HOME/$f"
-    done
+	for f in .??*; do
+		[[ "$f" = ".git" ]] && continue
+		[[ "$f" == ".DS_Store" ]] && continue
+		[[ "$f" == ".gitignore" ]] && continue
+		[[ "$f" == ".github" ]] && continue
+		ln -sfv "$DOTPATH/$f" "$HOME/$f"
+	done
 fi
