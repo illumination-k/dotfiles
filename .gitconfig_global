@@ -11,7 +11,7 @@
 	ui = auto
 [alias]
 	st = status
-	aa = add .
+	aa = add --all
 	ps = push
 	psh = push origin HEAD
 	pl = pull
