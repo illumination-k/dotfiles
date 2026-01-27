@@ -1,35 +1,10 @@
+# Machine-specific git configuration
+# Copy this file to ~/.gitconfig (NOT symlink!)
+# This allows 'git config --global' to work without affecting the dotfiles repo
+
+# Include shared configuration from dotfiles
+[include]
+	path = ~/dotfiles/.gitconfig_global
+
 [user]
-	name = illumination-k
 	email = illumination.k.27@gmail.com
-[core]
-	filemode = false
-	excludesfile = ~/.gitignore_global
-	editor = vim
-	ignorecase = false
-	quotepath = false
-[color]
-	ui = auto
-[alias]
-	st = status
-	aa = add .
-	ps = push
-	psh = push origin HEAD
-	pl = pull
-	plh = pull origin HEAD
-	cm = commit
-	cmm = commit -m
-	rmb = branch -D
-	issues = !gh issue list | cat
-	graph = log --graph --date-order --all --pretty=format:'%h %Cred%d %Cgreen%ad %Cblue%cn %Creset%s' --date=short
-	root = ! git rev-parse --show-superproject-working-tree --show-toplevel | grep "^/"
-	aliases = config --get-regexp alias
-	default = ! basename $(git symbolic-ref --short refs/remotes/origin/HEAD)
-	ret-default = ! git checkout $(git default) && git pull origin HEAD
-[github]
-	user = illumination-k
-[credential]
-[filter "lfs"]
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process

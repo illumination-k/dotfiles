@@ -81,6 +81,7 @@ fuzzy_search() {
     elif has_cmd peco; then
         peco
     else
+        echo "Neither sk and peco are not installed!"
         exit 1
     fi
 }

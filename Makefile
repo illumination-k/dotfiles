@@ -1,6 +1,6 @@
 DOTPATH    := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES := $(wildcard .??*)
-EXCLUSIONS := .DS_Store .git .gitignore .github .bashrc .reporc
+EXCLUSIONS := .DS_Store .git .gitignore .github .bashrc .reporc .gitconfig .gitconfig_global
 DIRECTORY  := .zsh
 DOTFILES   := $(filter-out $(EXCLUSIONS) $(DIRECTORY), $(CANDIDATES))
 
@@ -10,6 +10,14 @@ deploy: ## Create symlink to home directory (NOT deploy bashrc)
 	@echo ""
 	@$(foreach val, $(DOTFILES), ln -sfv $(abspath $(val)) $(HOME)/$(val);)
 	@$(foreach val, $(DIRECTORY), ln -sfvn $(abspath $(val)) $(HOME)/$(val);)
+	@echo "==> Setup git config files"
+	@ln -sfv $(abspath .gitconfig_global) $(HOME)/.gitconfig_global
+	@if [ ! -f $(HOME)/.gitconfig ]; then \
+		cp -v $(abspath .gitconfig) $(HOME)/.gitconfig; \
+		echo "Created $(HOME)/.gitconfig (add your machine-specific settings)"; \
+	else \
+		echo "$(HOME)/.gitconfig already exists, skipping copy"; \
+	fi
 
 bashrc: ## deploy bashrc
 	@echo "==> deploy bashrc"

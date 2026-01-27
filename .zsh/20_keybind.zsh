@@ -70,5 +70,5 @@ if has_cmd ghq; then
         zle clear-screen
     }
     zle -N fuzzy-ghq
-    bindkey '^[g' fuzzy-ghq
+    bindkey '^g' fuzzy-ghq
 fi

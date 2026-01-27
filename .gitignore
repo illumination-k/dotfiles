@@ -3,3 +3,4 @@
 .ssh/
 .aws/
 .local_profile
+tmp_*
