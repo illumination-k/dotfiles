@@ -15,7 +15,19 @@ in {
     '';
 
     # .zshrc相当（既存モジュールを統合）
-    initExtra = ''
+    initContent = ''
+      # ===== dircolors =====
+      ${lib.optionalString isDarwin ''
+        if [ -f ~/.colorrc ]; then
+          eval $(${pkgs.coreutils}/bin/gdircolors ~/.colorrc)
+        fi
+      ''}
+      ${lib.optionalString isLinux ''
+        if [ -f ~/.colorrc ]; then
+          eval $(dircolors ~/.colorrc)
+        fi
+      ''}
+
       # ===== 10_utils.zsh =====
       # プラットフォーム検出
       export PLATFORM="${platform}"
@@ -184,15 +196,4 @@ in {
   home.file.".starship.toml".source = ../../.starship.toml;
   home.file.".colorrc".source = ../../.colorrc;
 
-  # dircolors設定（platform依存）
-  programs.zsh.initExtraFirst =
-    lib.optionalString isDarwin ''
-      if [ -f ~/.colorrc ]; then
-        eval $(${pkgs.coreutils}/bin/gdircolors ~/.colorrc)
-      fi
-    '' + lib.optionalString isLinux ''
-      if [ -f ~/.colorrc ]; then
-        eval $(dircolors ~/.colorrc)
-      fi
-    '';
 }

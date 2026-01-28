@@ -6,9 +6,9 @@
 
   # ユーザー情報（環境変数から取得、空ならデフォルト）
   home.username = let user = builtins.getEnv "USER"; in
-    if user != "" then user else "testuser";
+    if user != "" then user else "illumination-k";
   home.homeDirectory = let home = builtins.getEnv "HOME"; in
-    if home != "" then home else "/home/testuser";
+    if home != "" then home else "/home/illumination-k";
 
   # Home Manager自身の管理を有効化
   programs.home-manager.enable = true;

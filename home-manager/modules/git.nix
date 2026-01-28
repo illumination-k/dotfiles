@@ -4,11 +4,10 @@
   programs.git = {
     enable = true;
 
-    # ユーザー情報
-    userName = "illumination-k";
-
     # 基本設定
-    extraConfig = {
+    settings = {
+      user.name = "illumination-k";
+
       core = {
         filemode = false;
         excludesfile = "~/.gitignore_global";
@@ -19,7 +18,7 @@
 
       color.ui = "auto";
 
-      # alias（.gitconfig_globalより）
+      # alias
       alias = {
         st = "status";
         aa = "add --all";
@@ -53,14 +52,6 @@
       merge.conflictStyle = "zdiff3";
     };
 
-    # git-delta統合
-    delta = {
-      enable = true;
-      options = {
-        navigate = true;
-      };
-    };
-
     # .gitignore_global
     ignores = [
       ".DS_Store"
@@ -70,6 +61,15 @@
       ".vscode/"
       ".idea/"
     ];
+  };
+
+  # delta統合
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options = {
+      navigate = true;
+    };
   };
 
   # .gitignore_globalファイル配置

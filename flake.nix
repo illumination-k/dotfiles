@@ -37,16 +37,16 @@
       # Home Manager設定
       homeConfigurations = {
         # macOS (Apple Silicon)
-        "testuser@aarch64-darwin" = mkHomeConfiguration "aarch64-darwin" "testuser";
+        "illumination-k@aarch64-darwin" = mkHomeConfiguration "aarch64-darwin" "illumination-k";
 
         # macOS (Intel)
-        "testuser@x86_64-darwin" = mkHomeConfiguration "x86_64-darwin" "testuser";
+        "illumination-k@x86_64-darwin" = mkHomeConfiguration "x86_64-darwin" "illumination-k";
 
         # Linux (x86_64)
-        "testuser@x86_64-linux" = mkHomeConfiguration "x86_64-linux" "testuser";
+        "illumination-k@x86_64-linux" = mkHomeConfiguration "x86_64-linux" "illumination-k";
 
         # Linux (ARM64) - Docker on Apple Silicon
-        "testuser@aarch64-linux" = mkHomeConfiguration "aarch64-linux" "testuser";
+        "illumination-k@aarch64-linux" = mkHomeConfiguration "aarch64-linux" "illumination-k";
       };
 
       # 開発環境（コンテナ内で使用）

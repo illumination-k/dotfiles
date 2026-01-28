@@ -5,7 +5,6 @@
     # 開発ツール
     cmake
     gcc
-    wget
 
     # Git関連
     gh           # GitHub CLI

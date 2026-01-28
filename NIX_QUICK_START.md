@@ -2,25 +2,47 @@
 
 ## コンテナで試す
 
-```bash
-# 1. Dockerコンテナを起動
-cd ~/dotfiles
-./docker/run-nix-test.sh
+### 自動テスト（デフォルト）
 
-# 2. コンテナ内で実行
-export USER=testuser
-export HOME=/home/testuser
-mkdir -p $HOME/.local/state/nix/profiles
+ビルド・activation・インストール確認まで一括実行：
+
+```bash
+cd ~/dotfiles
+bash docker/run-ci.sh
+```
+
+### インタラクティブモード
+
+コンテナ内で自由に探索・実験したい場合：
+
+```bash
+bash docker/run-ci.sh --interactive
+```
+
+コンテナ内で実行できるコマンド：
+
+```bash
 cd /workspace
 
-# 3. flake.nixの構文チェック
+# flake.nixの構文チェック
 nix flake check
 
-# 4. Home Managerビルド
-nix build --impure .#homeConfigurations."testuser@aarch64-linux".activationPackage
+# Home Managerビルド（アーキテクチャは自動検出）
+nix build --impure \
+  --result-symlink=/home/illumination-k/result \
+  .#homeConfigurations."illumination-k@aarch64-linux".activationPackage
 
-# 5. Home Manager適用
-nix run --impure home-manager/master -- switch --impure --flake .#testuser@aarch64-linux
+# activate
+/home/illumination-k/result/activate
+
+# インストール済みパッケージ確認
+ls /home/illumination-k/result/home-path/bin/
+
+# 生成されたconfigファイル確認
+find /home/illumination-k/result/home-files -type f
+
+# gitconfig確認
+cat /home/illumination-k/result/home-files/.config/git/config
 ```
 
 ## ローカル環境で使う（本番）
@@ -76,13 +98,13 @@ home-manager switch --impure --flake .
 
 ## 管理対象パッケージ
 
-- **開発ツール**: cmake, gcc, wget
-- **Git関連**: gh, ghq, git-delta
+- **開発ツール**: cmake, gcc
+- **Git関連**: gh, ghq, delta, gitui
 - **Rust CLIツール**: eza, bat, ripgrep, fd, skim
-- **Rust環境**: cargo, rustc, cargo-make
-- **Python**: pyenv, pipenv
-- **Node.js**: nodejs_20
-- **シェル**: zsh, tmux, starship
+- **Rust環境**: cargo, rustc
+- **エディタ・ターミナル**: helix, zellij, yazi
+- **バージョン管理**: mise, uv
+- **シェル**: zsh, starship
 
 詳細は [home-manager/modules/programs.nix](home-manager/modules/programs.nix) を参照。
 

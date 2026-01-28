@@ -36,12 +36,12 @@ jobs:
           # Linux x86_64
           - os: ubuntu-latest
             system: x86_64-linux
-            config: testuser@x86_64-linux
+            config: illumination-k@x86_64-linux
 
           # macOS Apple Silicon
           - os: macos-latest
             system: aarch64-darwin
-            config: testuser@aarch64-darwin
+            config: illumination-k@aarch64-darwin
 
     steps:
       - name: Checkout repository
@@ -76,12 +76,12 @@ jobs:
           # Linux x86_64
           - os: ubuntu-latest
             system: x86_64-linux
-            config: testuser@x86_64-linux
+            config: illumination-k@x86_64-linux
 
           # macOS Apple Silicon
           - os: macos-latest
             system: aarch64-darwin
-            config: testuser@aarch64-darwin
+            config: illumination-k@aarch64-darwin
 
     steps:
       - name: Checkout repository
@@ -98,7 +98,7 @@ jobs:
 
       - name: Setup test environment
         run: |
-          export USER=testuser
+          export USER=illumination-k
           mkdir -p $HOME/.local/state/nix/profiles
 
       - name: Apply Home Manager (dry-run)

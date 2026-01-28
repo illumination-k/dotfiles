@@ -1,0 +1,52 @@
+ARG USERNAME=illumination-k
+
+FROM ubuntu:24.04 AS nix-base
+ARG USERNAME
+
+# Nix インストール依存パッケージ
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates xz-utils && \
+    rm -rf /var/lib/apt/lists/*
+
+# ユーザー作成・/nix準備
+RUN userdel -r ubuntu 2>/dev/null; useradd -m -u 1000 -s /bin/sh ${USERNAME} && \
+    mkdir -m 0755 /nix && \
+    chown ${USERNAME}:${USERNAME} /nix
+
+USER ${USERNAME}
+
+# Nix single-user インストール
+RUN curl -L https://nixos.org/nix/install | sh -s -- --no-daemon
+
+ENV PATH=/home/${USERNAME}/.nix-profile/bin:$PATH
+
+# flakes有効化
+RUN mkdir -p ~/.config/nix && \
+    echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf
+
+FROM nix-base AS builder
+ARG USERNAME
+
+WORKDIR /workspace
+COPY . .
+
+# アーキテクチャ自動検出してビルド
+RUN ARCH=$(uname -m) && \
+    case "$ARCH" in \
+      aarch64) SYSTEM="aarch64-linux" ;; \
+      x86_64)  SYSTEM="x86_64-linux" ;; \
+      *)       echo "Unsupported: $ARCH" && exit 1 ;; \
+    esac && \
+    nix build --impure \
+      --result-symlink=/home/${USERNAME}/result \
+      .#homeConfigurations."${USERNAME}@${SYSTEM}".activationPackage
+
+FROM builder
+ARG USERNAME
+
+RUN /home/${USERNAME}/result/activate && \
+    echo "=== Installed packages ===" && \
+    ls /home/${USERNAME}/result/home-path/bin/ | sort && \
+    echo "" && \
+    echo "=== Config files ===" && \
+    find /home/${USERNAME}/result/home-files -maxdepth 2 -type f 2>/dev/null | sort
