@@ -4,3 +4,7 @@
 .aws/
 .local_profile
 tmp_*
+
+# Nix
+result
+result-*

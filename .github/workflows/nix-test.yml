@@ -1,0 +1,146 @@
+name: Nix CI
+
+on:
+  push:
+
+jobs:
+  flake-check:
+    name: Flake Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Run flake check
+        run: nix flake check
+
+  build-home-manager:
+    name: Build Home Manager (${{ matrix.system }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux x86_64
+          - os: ubuntu-latest
+            system: x86_64-linux
+            config: illumination-k@x86_64-linux
+
+          # macOS Apple Silicon
+          - os: macos-latest
+            system: aarch64-darwin
+            config: illumination-k@aarch64-darwin
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Build Home Manager configuration
+        run: |
+          nix build --impure .#homeConfigurations."${{ matrix.config }}".activationPackage \
+            --show-trace
+
+      - name: Check build outputs
+        run: |
+          ls -la result/
+          echo "Build successful for ${{ matrix.system }}"
+
+  test-home-manager:
+    name: Test Home Manager Activation (${{ matrix.system }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux x86_64
+          - os: ubuntu-latest
+            system: x86_64-linux
+            config: illumination-k@x86_64-linux
+
+          # macOS Apple Silicon
+          - os: macos-latest
+            system: aarch64-darwin
+            config: illumination-k@aarch64-darwin
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Setup test environment
+        run: |
+          export USER=illumination-k
+          mkdir -p $HOME/.local/state/nix/profiles
+
+      - name: Apply Home Manager (dry-run)
+        run: |
+          nix run --impure home-manager/master -- switch \
+            --impure \
+            --flake .#${{ matrix.config }} \
+            --dry-run
+
+      - name: Verify packages are available
+        run: |
+          # ビルド成果物からパッケージが正しく含まれているか確認
+          nix build --impure .#homeConfigurations."${{ matrix.config }}".activationPackage
+
+          # パッケージリストを確認
+          if [ -d result/home-path ]; then
+            echo "=== Installed packages ==="
+            ls -1 result/home-path/bin/ | head -20
+
+            # 重要なパッケージの存在確認
+            for cmd in eza bat rg fd hx zellij mise uv; do
+              if [ -f "result/home-path/bin/$cmd" ]; then
+                echo "✓ $cmd is available"
+              else
+                echo "✗ $cmd is missing"
+                exit 1
+              fi
+            done
+          fi
+
+  check-formatting:
+    name: Check Nix Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
+
+      - name: Check Nix files formatting
+        run: |
+          # nixfmtでフォーマットチェック（将来的に追加）
+          # nix fmt -- --check .
+          echo "Formatting check placeholder (nixfmt will be added later)"

@@ -1,6 +1,9 @@
-# README
+# dotfiles
 
 dotfiles maintained by `illumination-k`
+
+[![install](https://github.com/illumination-k/dotfiles/actions/workflows/install.yml/badge.svg)](https://github.com/illumination-k/dotfiles/actions/workflows/install.yml)
+[![Nix CI](https://github.com/illumination-k/dotfiles/actions/workflows/nix-test.yml/badge.svg)](https://github.com/illumination-k/dotfiles/actions/workflows/nix-test.yml)
 
 ![terminal](doc/terminal.PNG)
 
