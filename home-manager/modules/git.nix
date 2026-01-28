@@ -15,7 +15,6 @@
         editor = "vim";
         ignorecase = false;
         quotepath = false;
-        pager = "delta";
       };
 
       color.ui = "auto";
@@ -49,12 +48,6 @@
         clean = "git-lfs clean -- %f";
         smudge = "git-lfs smudge -- %f";
         process = "git-lfs filter-process";
-      };
-
-      interactive.diffFilter = "delta --color-only";
-
-      delta = {
-        navigate = true;
       };
 
       merge.conflictStyle = "zdiff3";

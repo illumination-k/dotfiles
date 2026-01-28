@@ -57,7 +57,6 @@
             packages = with pkgs; [
               git
               vim
-              home-manager
             ];
           };
         }

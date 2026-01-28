@@ -185,13 +185,14 @@ in {
   home.file.".colorrc".source = ../../.colorrc;
 
   # dircolors設定（platform依存）
-  programs.zsh.initExtraFirst = lib.mkIf isDarwin ''
-    if [ -f ~/.colorrc ]; then
-      eval $(${pkgs.coreutils}/bin/gdircolors ~/.colorrc)
-    fi
-  '' + lib.mkIf isLinux ''
-    if [ -f ~/.colorrc ]; then
-      eval $(dircolors ~/.colorrc)
-    fi
-  '';
+  programs.zsh.initExtraFirst =
+    lib.optionalString isDarwin ''
+      if [ -f ~/.colorrc ]; then
+        eval $(${pkgs.coreutils}/bin/gdircolors ~/.colorrc)
+      fi
+    '' + lib.optionalString isLinux ''
+      if [ -f ~/.colorrc ]; then
+        eval $(dircolors ~/.colorrc)
+      fi
+    '';
 }

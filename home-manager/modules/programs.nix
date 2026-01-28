@@ -10,7 +10,7 @@
     # Git関連
     gh           # GitHub CLI
     ghq          # Gitリポジトリ管理
-    git-delta    # diff表示改善
+    delta        # diff表示改善 (git-delta)
     gitui        # ターミナルUI Gitクライアント
 
     # Rust製CLIツール
