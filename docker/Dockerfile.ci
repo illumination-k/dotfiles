@@ -38,11 +38,12 @@ RUN ARCH=$(uname -m) && \
       *)       echo "Unsupported: $ARCH" && exit 1 ;; \
     esac && \
     nix build --impure \
-      --result-symlink=/home/${USERNAME}/result \
+      -o /home/${USERNAME}/result \
       .#homeConfigurations."${USERNAME}@${SYSTEM}".activationPackage
 
 FROM builder
 ARG USERNAME
+ENV USER=${USERNAME}
 
 RUN /home/${USERNAME}/result/activate && \
     echo "=== Installed packages ===" && \
