@@ -1,0 +1,15 @@
+FROM nixos/nix:latest
+
+# flakesを有効化
+RUN mkdir -p /etc/nix && \
+    echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
+
+# 作業ディレクトリ
+WORKDIR /workspace
+
+# bashとgitはnix shellで利用可能にする
+# 初回のnixpkgsチャンネル更新
+RUN nix-channel --update
+
+# エントリーポイント
+CMD ["/bin/sh"]

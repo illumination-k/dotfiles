@@ -1,0 +1,19 @@
+{ config, pkgs, lib, ... }:
+
+{
+  # マシン固有のgit設定
+  programs.git = {
+    userEmail = "your-actual-email@example.com";  # 各マシンで変更
+  };
+
+  # マシン固有の環境変数
+  home.sessionVariables = {
+    # 例: シークレットなど
+    # OPENAI_API_KEY = "sk-...";
+  };
+
+  # マシン固有のパッケージ
+  home.packages = with pkgs; [
+    # 例: 特定マシンでのみ使うツール
+  ];
+}
