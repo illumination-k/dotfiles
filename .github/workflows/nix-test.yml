@@ -116,7 +116,7 @@ jobs:
             ls -1 result/home-path/bin/ | head -20
 
             # 重要なパッケージの存在確認
-            for cmd in eza bat rg fd helix zellij mise uv; do
+            for cmd in eza bat rg fd hx zellij mise uv; do
               if [ -f "result/home-path/bin/$cmd" ]; then
                 echo "✓ $cmd is available"
               else
