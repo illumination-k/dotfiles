@@ -40,7 +40,6 @@ alias dotf='cd ~/dotfiles'
 
 # docker
 alias d='docker'
-alias ldrun='docker run --rm -it -v `pwd`:/local_volume'
 
 # 複数ファイルのmv 例　zmv *.txt *.txt.bk
 autoload -Uz zmv
