@@ -16,18 +16,6 @@ in {
 
     # .zshrc相当（既存モジュールを統合）
     initContent = ''
-      # ===== dircolors =====
-      ${lib.optionalString isDarwin ''
-        if [ -f ~/.colorrc ]; then
-          eval $(${pkgs.coreutils}/bin/gdircolors ~/.colorrc)
-        fi
-      ''}
-      ${lib.optionalString isLinux ''
-        if [ -f ~/.colorrc ]; then
-          eval $(dircolors ~/.colorrc)
-        fi
-      ''}
-
       # ===== 10_utils.zsh =====
       # プラットフォーム検出
       export PLATFORM="${platform}"
@@ -94,13 +82,9 @@ in {
     # ===== 30_alias.zsh =====
     shellAliases = {
       # ls（ezaまたはplatform依存）
-      ls = if (builtins.hasAttr "eza" pkgs) then "eza -F"
-           else if isDarwin then "gls -F --color=auto"
-           else "ls -F --color=auto";
-      lsa = if (builtins.hasAttr "eza" pkgs) then "eza -aF"
-            else if isDarwin then "gls -aF --color=auto"
-            else "ls -aF --color=auto";
-      tree = "eza -hTF --ignore-glob='.git'";
+      ls = "exa -F";
+      lsa = "exa -aF";
+      tree = "exa -hTF --ignore-glob='.git'";
 
       # cd shortcuts
       ".." = "cd ..";
@@ -114,7 +98,7 @@ in {
 
       # git
       g = "git";
-      gg = "gitui";  # Git TUI
+      gu = "gitui";  # Git TUI
 
       # ghq
       gcd = "cd $(ghq list -p | fuzzy_search)";

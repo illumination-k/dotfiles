@@ -8,9 +8,14 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    codex = {
+      url = "github:openai/codex";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, codex, ... }:
     let
       # サポートするシステム
       systems = [ "x86_64-darwin" "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
@@ -30,6 +35,8 @@
           modules = [ ./home-manager/home.nix ];
           extraSpecialArgs = {
             inherit isDarwin isLinux;
+            inherit codex;
+            system = system;
           };
         };
 
