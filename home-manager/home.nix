@@ -16,7 +16,8 @@
   # テスト用の最小パッケージ
   home.packages = with pkgs; [
     hello  # 動作確認用
-    codex.packages.${system}.codex-rs  # OpenAI Codex CLI (Rust版)
+    codex.packages.${system}.codex  # OpenAI Codex CLI (Rust版)
+    claude-code  # Anthropic Claude Code CLI
   ];
 
   # 環境変数
