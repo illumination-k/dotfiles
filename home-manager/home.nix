@@ -1,4 +1,4 @@
-{ config, pkgs, lib, isDarwin, isLinux, ... }:
+{ config, pkgs, lib, isDarwin, isLinux, codex, system, ... }:
 
 {
   # Home Managerバージョン
@@ -16,6 +16,8 @@
   # テスト用の最小パッケージ
   home.packages = with pkgs; [
     hello  # 動作確認用
+    codex.packages.${system}.codex  # OpenAI Codex CLI (Rust版)
+    claude-code  # Anthropic Claude Code CLI
   ];
 
   # 環境変数
@@ -30,7 +32,5 @@
     ./modules/git.nix        # git設定
     ./modules/helix.nix      # Helixエディタ設定
     ./modules/zellij.nix     # Zellijターミナル設定
-    # ./modules/mise.nix     # mise（ランタイム管理）設定 — プロジェクトごと .mise.toml で管理
-    # ./modules/local.nix    # マシン固有設定（本番環境で有効化）
   ];
 }

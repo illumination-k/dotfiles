@@ -8,9 +8,14 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    codex = {
+      url = "github:sadjow/codex-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, codex, ... }:
     let
       # サポートするシステム
       systems = [ "x86_64-darwin" "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
@@ -21,7 +26,10 @@
       # Home Manager設定生成関数
       mkHomeConfiguration = system: username:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
           isDarwin = pkgs.stdenv.isDarwin;
           isLinux = pkgs.stdenv.isLinux;
         in
@@ -30,6 +38,8 @@
           modules = [ ./home-manager/home.nix ];
           extraSpecialArgs = {
             inherit isDarwin isLinux;
+            inherit codex;
+            system = system;
           };
         };
 

@@ -37,7 +37,7 @@ RUN ARCH=$(uname -m) && \
       x86_64)  SYSTEM="x86_64-linux" ;; \
       *)       echo "Unsupported: $ARCH" && exit 1 ;; \
     esac && \
-    nix build --impure \
+    nix build --impure --no-update-lock-file \
       -o /home/${USERNAME}/result \
       .#homeConfigurations."${USERNAME}@${SYSTEM}".activationPackage
 
