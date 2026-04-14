@@ -1,2 +1,28 @@
+# VCS / CI / editor
 .git/
+.github/
+.claude/
+
+# Docker itself (avoid self-rebuild invalidations)
 docker/
+.dockerignore
+
+# Docs
+*.md
+LICENSE
+doc/
+
+# Host-only / legacy tooling not used by nix build
+Brewfile
+Makefile
+bin/
+etc/
+test/
+win/
+.reporc
+.mise.toml
+.bashrc
+.profile
+.gitconfig
+.gitconfig-personal
+.gitconfig_global

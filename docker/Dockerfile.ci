@@ -1,37 +1,48 @@
+# syntax=docker/dockerfile:1.7
 ARG USERNAME=illumination-k
+# Pin base image by digest for reproducibility.
+ARG NIX_IMAGE=nixos/nix:2.34.6@sha256:e2fe74e96e965653c7b8f16ac64d1e56581c63c84d7fa07fb0692fd055cd06b0
 
-FROM ubuntu:24.04 AS nix-base
+########################################
+# Stage 1: Nix base (pinned multi-user nix image)
+########################################
+FROM ${NIX_IMAGE} AS nix-base
 ARG USERNAME
 
-# Nix インストール依存パッケージ
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl ca-certificates xz-utils && \
-    rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /etc/nix && \
+    printf '%s\n' \
+      'experimental-features = nix-command flakes' \
+      'max-jobs = auto' \
+      'cores = 0' \
+      > /etc/nix/nix.conf
 
-# ユーザー作成・/nix準備
-RUN userdel -r ubuntu 2>/dev/null; useradd -m -u 1000 -s /bin/sh ${USERNAME} && \
-    mkdir -m 0755 /nix && \
-    chown ${USERNAME}:${USERNAME} /nix
+RUN mkdir -p /home/${USERNAME}
 
-USER ${USERNAME}
+ENV USER=${USERNAME} \
+    HOME=/home/${USERNAME}
 
-# Nix single-user インストール
-RUN curl -L https://nixos.org/nix/install | sh -s -- --no-daemon
-
-ENV PATH=/home/${USERNAME}/.nix-profile/bin:$PATH
-
-# flakes有効化
-RUN mkdir -p ~/.config/nix && \
-    echo 'experimental-features = nix-command flakes' >> ~/.config/nix/nix.conf
-
-FROM nix-base AS builder
+########################################
+# Stage 2: Fetch flake inputs
+########################################
+FROM nix-base AS deps
 ARG USERNAME
-
 WORKDIR /workspace
+
+COPY flake.nix flake.lock ./
+
+RUN --mount=type=cache,target=/root/.cache/nix,sharing=locked \
+    nix flake archive --json > /dev/null
+
+########################################
+# Stage 3: Build home-manager activation package
+########################################
+FROM deps AS builder
+ARG USERNAME
+
 COPY . .
 
-# アーキテクチャ自動検出してビルド
-RUN ARCH=$(uname -m) && \
+RUN --mount=type=cache,target=/root/.cache/nix,sharing=locked \
+    ARCH=$(uname -m) && \
     case "$ARCH" in \
       aarch64) SYSTEM="aarch64-linux" ;; \
       x86_64)  SYSTEM="x86_64-linux" ;; \
@@ -41,13 +52,22 @@ RUN ARCH=$(uname -m) && \
       -o /home/${USERNAME}/result \
       .#homeConfigurations."${USERNAME}@${SYSTEM}".activationPackage
 
-FROM builder
-ARG USERNAME
-ENV USER=${USERNAME}
+# Drop build-time deps; keep only runtime closure referenced by result.
+RUN nix-collect-garbage && nix-store --optimise
 
-RUN /home/${USERNAME}/result/activate && \
+########################################
+# Stage 4: Slim runtime image
+########################################
+FROM nix-base
+ARG USERNAME
+
+COPY --from=builder /nix /nix
+COPY --from=builder --chown=${USERNAME}:${USERNAME} /home/${USERNAME}/result /home/${USERNAME}/result
+
+RUN mkdir -p /home/${USERNAME}/.local/state/nix/profiles \
+             /home/${USERNAME}/.local/state/home-manager/gcroots && \
+    /home/${USERNAME}/result/activate && \
     echo "=== Installed packages ===" && \
-    ls /home/${USERNAME}/result/home-path/bin/ | sort && \
-    echo "" && \
-    echo "=== Config files ===" && \
-    find /home/${USERNAME}/result/home-files -maxdepth 2 -type f 2>/dev/null | sort
+    ls /home/${USERNAME}/result/home-path/bin/ | sort
+
+WORKDIR /home/${USERNAME}

@@ -108,10 +108,6 @@ in {
       # grep
       grep = if (builtins.hasAttr "ripgrep" pkgs) then "rg" else "grep --color";
 
-      # エディタ
-      hx = "helix";
-      vim = "helix";  # vimコマンドをhelixに置き換え
-
       # ターミナルマルチプレクサ
       zj = "zellij";
 
@@ -124,7 +120,7 @@ in {
       m = "mise";
 
       # zshrc管理
-      zshrc = "helix ~/.zshrc";
+      zshrc = "hx ~/.zshrc";
       reload = "source ~/.zshrc";
 
       # クリップボード（platform依存）
