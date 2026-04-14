@@ -38,6 +38,18 @@
         default = "! basename $(git symbolic-ref --short refs/remotes/origin/HEAD)";
         ret-default = "! git checkout $(git default) && git pull origin HEAD";
         scheckout = "! git branch -l | sk | xargs git checkout";
+        wtadd = ''
+          !f() { \
+            branch_name="$1"; \
+            worktree_path="$2"; \
+            if [ -z "$branch_name" ] || [ -z "$worktree_path" ]; then \
+              echo "Usage: git wtadd <branch-name> <path>"; \
+              return 1; \
+            fi; \
+            git branch "$branch_name" main && \
+            git worktree add "$worktree_path"/"$branch_name" "$branch_name" && \
+            code "$worktree_path"; \
+          }; f'';
       };
 
       github.user = "illumination-k";
@@ -51,6 +63,14 @@
 
       merge.conflictStyle = "zdiff3";
     };
+
+    # リポジトリ別 user 設定（personal repos でメール切替など）
+    includes = [
+      {
+        condition = "gitdir:~/ghq/github.com/illumination-k/";
+        path = "~/.gitconfig-personal";
+      }
+    ];
 
     # .gitignore_global
     ignores = [

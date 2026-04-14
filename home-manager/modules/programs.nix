@@ -32,6 +32,9 @@
     mise         # 統合ランタイムマネージャー（旧rtx）
     uv           # 高速なPythonパッケージマネージャー
 
+    # Kubernetes
+    kubectl      # Kubernetes CLI
+
     # シェル環境
     zsh
     starship
