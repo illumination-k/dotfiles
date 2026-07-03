@@ -1,0 +1,27 @@
+# dev pod用sshd設定
+# ホストキーは/data/ssh（PVC推奨）に置き、Pod再作成後も同一性を保つ
+
+Port 22
+AddressFamily any
+HostKey /data/ssh/ssh_host_ed25519_key
+
+# 認証は公開鍵のみ
+PermitRootLogin no
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PubkeyAuthentication yes
+AuthorizedKeysFile .ssh/authorized_keys
+UsePAM no
+
+# entrypointが書き出す~/.ssh/environmentでAPIキー等を伝搬
+PermitUserEnvironment yes
+
+# TTY体験
+PrintMotd no
+AcceptEnv LANG LC_* COLORTERM
+
+# sftp（Zed Remote等が使用）
+Subsystem sftp internal-sftp
+
+ClientAliveInterval 30
+ClientAliveCountMax 6

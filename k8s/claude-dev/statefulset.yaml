@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: claude-dev
+  labels:
+    app: claude-dev
+spec:
+  serviceName: claude-dev
+  replicas: 1
+  selector:
+    matchLabels:
+      app: claude-dev
+  template:
+    metadata:
+      labels:
+        app: claude-dev
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: dev
+          # docker/Dockerfile.ci の --target=dev でビルドしたイメージ
+          image: ghcr.io/illumination-k/devenv-dev:latest
+          imagePullPolicy: Always
+          ports:
+            - name: ssh
+              containerPort: 22
+          env:
+            - name: TERM
+              value: xterm-256color
+            # 認証情報・セッション履歴を~/.claude配下に集約してPVCで永続化
+            - name: CLAUDE_CONFIG_DIR
+              value: /home/illumination-k/.claude
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: claude-dev
+                  key: anthropic-api-key
+                  optional: true # OAuthログイン(claude login)を使うなら不要
+            - name: AUTHORIZED_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: claude-dev
+                  key: authorized-keys
+                  optional: true # kubectl execのみで使うなら不要
+          volumeMounts:
+            - name: data
+              mountPath: /workspace
+              subPath: workspace
+            - name: data
+              mountPath: /home/illumination-k/.claude
+              subPath: claude-config
+            - name: data
+              mountPath: /data/ssh
+              subPath: ssh-host-keys
+          readinessProbe:
+            tcpSocket:
+              port: ssh
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              memory: 4Gi
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 20Gi

@@ -1,0 +1,17 @@
+# StatefulSet用headless Service
+# 接続はkubectl exec / kubectl port-forwardを想定しているため、
+# クラスタ外への公開はしない
+apiVersion: v1
+kind: Service
+metadata:
+  name: claude-dev
+  labels:
+    app: claude-dev
+spec:
+  clusterIP: None
+  selector:
+    app: claude-dev
+  ports:
+    - name: ssh
+      port: 22
+      targetPort: ssh
