@@ -39,7 +39,12 @@ RUN --mount=type=cache,target=/root/.cache/nix,sharing=locked \
 FROM deps AS builder
 ARG USERNAME
 
-COPY . .
+# home-manager評価が参照するファイルだけをコピーする（COPY . . にすると
+# dev用設定やk8sマニフェスト等の無関係な変更でnixビルドのキャッシュが壊れる）。
+# flake.nix / flake.lock はdepsステージでコピー済み。
+COPY home-manager/ home-manager/
+COPY .zsh/ .zsh/
+COPY .gitignore_global .starship.toml .colorrc ./
 
 RUN --mount=type=cache,target=/root/.cache/nix,sharing=locked \
     ARCH=$(uname -m) && \
@@ -98,9 +103,18 @@ RUN set -eu; \
     chown -Rh ${UID}:${GID} /home/${USERNAME} /workspace
 
 COPY docker/sshd_config /etc/ssh/sshd_config
-COPY docker/entrypoint-dev.sh /usr/local/bin/entrypoint-dev.sh
-RUN chmod 755 /usr/local/bin/entrypoint-dev.sh
+COPY --chmod=755 docker/entrypoint-dev.sh /usr/local/bin/entrypoint-dev.sh
+COPY --chmod=755 docker/dev-login.sh /usr/local/bin/dev-login
 
+# entrypointとdev-loginがビルド時のユーザー名を参照できるようにする
+# （ARGとスクリプト内デフォルトの二重管理を避ける）
+ENV DEV_USER=${USERNAME}
 ENV TERM=xterm-256color
 EXPOSE 22
 ENTRYPOINT ["/usr/local/bin/entrypoint-dev.sh"]
+
+########################################
+# Default target: --targetなしのdocker buildが従来どおり
+# slim runtimeイメージになるよう最終ステージをruntimeにする
+########################################
+FROM runtime

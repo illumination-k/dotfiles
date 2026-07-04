@@ -13,7 +13,8 @@ PubkeyAuthentication yes
 AuthorizedKeysFile .ssh/authorized_keys
 UsePAM no
 
-# entrypointが書き出す~/.ssh/environmentでAPIキー等を伝搬
+# entrypointが書き出す~/.ssh/environment（600）でAPIキー等を伝搬する
+# （コンテナenvはsshdセッションに継承されないため）
 PermitUserEnvironment yes
 
 # TTY体験

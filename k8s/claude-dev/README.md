@@ -17,6 +17,9 @@ docker push ghcr.io/illumination-k/devenv-dev:latest
 
 masterへのpushでは GitHub Actions（docker-ci.yml）が `devenv`（runtime）と `devenv-dev`（dev）の両方をGHCRへpushする。
 
+> **Note**: GHCRの新規パッケージはデフォルトでprivateになる。クラスタから
+> pullできない場合は、パッケージをpublicにするか`imagePullSecrets`を設定すること。
+
 ## デプロイ
 
 ```bash
@@ -36,7 +39,8 @@ APIキーの代わりにOAuthを使う場合はSecretの`anthropic-api-key`を�
 ### kubectl exec（手軽）
 
 ```bash
-kubectl exec -it claude-dev-0 -- su - illumination-k
+# イメージにはsuが無いため、専用のdev-loginヘルパーでユーザーのログインシェルに入る
+kubectl exec -it claude-dev-0 -- /usr/local/bin/dev-login
 # pod内で
 herdr        # attach。切断してもherdr serverとagentは生き続ける
 ```
@@ -67,8 +71,8 @@ sshホストキーは`/data/ssh`（PVCの`ssh-host-keys` subPath）に永続化�
 
 sshdはコンテナのenvをセッションに引き継がないため、entrypointが起動時に
 `ANTHROPIC_API_KEY`等のホワイトリスト（`DEV_POD_EXPORT_VARS`で上書き可）を
-`/etc/zshenv`と`~/.ssh/environment`へ書き出している。`kubectl exec`の場合は
-コンテナenvがそのまま継承される。
+`~/.ssh/environment`（600、ユーザーのみ読める）へ書き出している。
+`kubectl exec`（`dev-login`含む）の場合はコンテナenvがそのまま継承される。
 
 ## レイアウト
 

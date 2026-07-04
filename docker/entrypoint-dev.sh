@@ -8,11 +8,10 @@ set -eu
 USERNAME="${DEV_USER:-illumination-k}"
 HOME_DIR="/home/${USERNAME}"
 BIN="${HOME_DIR}/result/home-path/bin"
+SSH_DIR="${HOME_DIR}/.ssh"
 
-uid() { awk -F: -v u="$1" '$1 == u { print $3 }' /etc/passwd; }
-gid() { awk -F: -v u="$1" '$1 == u { print $4 }' /etc/passwd; }
-USER_UID="$(uid "${USERNAME}")"
-USER_GID="$(gid "${USERNAME}")"
+USER_UID="$(id -u "${USERNAME}")"
+USER_GID="$(id -g "${USERNAME}")"
 
 # --- sshホストキー ---
 mkdir -p /data/ssh
@@ -21,34 +20,50 @@ if [ ! -f /data/ssh/ssh_host_ed25519_key ]; then
 fi
 chmod 600 /data/ssh/ssh_host_ed25519_key
 
+mkdir -p "${SSH_DIR}"
+chmod 700 "${SSH_DIR}"
+
 # --- authorized_keys（Secretの環境変数から） ---
 if [ -n "${AUTHORIZED_KEYS:-}" ]; then
-  mkdir -p "${HOME_DIR}/.ssh"
-  printf '%s\n' "${AUTHORIZED_KEYS}" > "${HOME_DIR}/.ssh/authorized_keys"
-  chmod 700 "${HOME_DIR}/.ssh"
-  chmod 600 "${HOME_DIR}/.ssh/authorized_keys"
+  printf '%s\n' "${AUTHORIZED_KEYS}" > "${SSH_DIR}/authorized_keys"
+  chmod 600 "${SSH_DIR}/authorized_keys"
 fi
 
 # --- コンテナenvをsshセッションへ伝搬 ---
 # kubectl execはコンテナenvをそのまま継承するが、sshdは継承しないため、
-# ホワイトリストのenvを/etc/zshenvと~/.ssh/environmentに書き出す
+# ホワイトリストのenvを~/.ssh/environment（sshd_configの
+# PermitUserEnvironmentで有効化、600でユーザーのみ読める）に書き出す。
+# 改行を含む値はsshdのパーサが扱えないためスキップする。
 EXPORT_VARS="${DEV_POD_EXPORT_VARS:-ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN ANTHROPIC_BASE_URL CLAUDE_CONFIG_DIR HTTP_PROXY HTTPS_PROXY NO_PROXY}"
-: > /etc/zshenv
-mkdir -p "${HOME_DIR}/.ssh"
-: > "${HOME_DIR}/.ssh/environment"
+NL="$(printf '\nx')"
+NL="${NL%x}"
+: > "${SSH_DIR}/environment"
+chmod 600 "${SSH_DIR}/environment"
 for var in ${EXPORT_VARS}; do
-  eval "val=\${${var}:-}"
+  case "${var}" in
+    *[!A-Za-z0-9_]* | [0-9]*)
+      echo "entrypoint-dev: skipping invalid variable name: ${var}" >&2
+      continue
+      ;;
+  esac
+  val="$(printenv "${var}" 2>/dev/null || true)"
   [ -n "${val}" ] || continue
-  escaped=$(printf '%s' "${val}" | sed "s/'/'\\\\''/g")
-  printf "export %s='%s'\n" "${var}" "${escaped}" >> /etc/zshenv
-  printf '%s=%s\n' "${var}" "${val}" >> "${HOME_DIR}/.ssh/environment"
+  case "${val}" in
+    *"${NL}"*)
+      echo "entrypoint-dev: skipping ${var}: multi-line values are not supported by sshd" >&2
+      continue
+      ;;
+  esac
+  printf '%s=%s\n' "${var}" "${val}" >> "${SSH_DIR}/environment"
 done
-chmod 644 /etc/zshenv
-chmod 600 "${HOME_DIR}/.ssh/environment"
 
-# --- PVCマウント点の所有権（マウント直後はroot所有のため） ---
-for d in /workspace "${HOME_DIR}/.claude" "${HOME_DIR}/.ssh"; do
-  if [ -e "${d}" ]; then
+# --- マウント点の所有権 ---
+# PVCの初回マウント時はroot所有になるためユーザーへ渡す。
+# 2回目以降のchown -R（大きなworkspaceではO(ファイル数)）を避けるため、
+# トップレベルの所有者が既に一致していればスキップする。
+chown -R "${USER_UID}:${USER_GID}" "${SSH_DIR}"
+for d in /workspace "${HOME_DIR}/.claude"; do
+  if [ -e "${d}" ] && [ "$(stat -c %u "${d}")" != "${USER_UID}" ]; then
     chown -R "${USER_UID}:${USER_GID}" "${d}"
   fi
 done

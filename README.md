@@ -40,7 +40,7 @@ K8s上にinteractiveな開発環境（claude-code + herdr + sshd）を立てら�
 
 ```bash
 kubectl apply -k k8s/claude-dev
-kubectl exec -it claude-dev-0 -- su - illumination-k
+kubectl exec -it claude-dev-0 -- /usr/local/bin/dev-login
 ```
 
 ## License

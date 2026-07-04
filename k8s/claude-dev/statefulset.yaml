@@ -25,8 +25,7 @@ spec:
             - name: ssh
               containerPort: 22
           env:
-            - name: TERM
-              value: xterm-256color
+            # TERMはイメージのENVで設定済み（ssh接続時はクライアント側の値が優先）
             # 認証情報・セッション履歴を~/.claude配下に集約してPVCで永続化
             - name: CLAUDE_CONFIG_DIR
               value: /home/illumination-k/.claude

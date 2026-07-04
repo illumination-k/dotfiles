@@ -18,8 +18,10 @@ if [ "${1:-}" = "--dev" ]; then
   exit 0
 fi
 
-# CI テストモード（デフォルト）
+# CI テストモード（デフォルト）: runtimeとdevの両方をビルドして検証する
+# （devはruntimeの差分レイヤーだけなので追加コストは小さい）
 echo "=== Building and testing Home Manager ==="
 docker build -f docker/Dockerfile.ci --target=runtime -t "$IMAGE" .
+docker build -f docker/Dockerfile.ci --target=dev -t "${IMAGE}-dev" .
 echo ""
 echo "=== SUCCESS ==="
