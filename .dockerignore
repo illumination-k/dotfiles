@@ -3,8 +3,11 @@
 .github/
 .claude/
 
-# Docker itself (avoid self-rebuild invalidations)
-docker/
+# Docker itself (avoid self-rebuild invalidations).
+# sshd_config/entrypoint-dev.sh are excluded individually (not the whole
+# docker/ dir) because the devステージがCOPYで実際に必要とする
+docker/Dockerfile.ci
+docker/run-ci.sh
 .dockerignore
 
 # Docs
