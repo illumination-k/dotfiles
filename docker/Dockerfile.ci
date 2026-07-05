@@ -39,7 +39,12 @@ RUN --mount=type=cache,target=/root/.cache/nix,sharing=locked \
 FROM deps AS builder
 ARG USERNAME
 
-COPY . .
+# home-manager評価が参照するファイルだけをコピーする（COPY . . にすると
+# dev用設定やk8sマニフェスト等の無関係な変更でnixビルドのキャッシュが壊れる）。
+# flake.nix / flake.lock はdepsステージでコピー済み。
+COPY home-manager/ home-manager/
+COPY .zsh/ .zsh/
+COPY .gitignore_global .starship.toml .colorrc ./
 
 RUN --mount=type=cache,target=/root/.cache/nix,sharing=locked \
     ARCH=$(uname -m) && \
@@ -58,7 +63,7 @@ RUN nix-collect-garbage && nix-store --optimise
 ########################################
 # Stage 4: Slim runtime image
 ########################################
-FROM nix-base
+FROM nix-base AS runtime
 ARG USERNAME
 
 COPY --from=builder /nix /nix
@@ -71,3 +76,45 @@ RUN mkdir -p /home/${USERNAME}/.local/state/nix/profiles \
     ls /home/${USERNAME}/result/home-path/bin/ | sort
 
 WORKDIR /home/${USERNAME}
+
+########################################
+# Stage 5: Interactive dev image (K8s dev pod)
+#   - sshd常駐でZed Remote / ssh接続可能
+#   - herdr/zellij + claude-code入り（home-manager経由）
+########################################
+FROM runtime AS dev
+ARG USERNAME
+ARG UID=1000
+ARG GID=1000
+
+# ログインユーザーとsshd特権分離ユーザーを作成
+# （ベースイメージにshadowツールがない前提で/etc/passwdへ直接追記）
+RUN set -eu; \
+    grep -q "^${USERNAME}:" /etc/passwd || { \
+      echo "${USERNAME}:x:${UID}:${GID}::/home/${USERNAME}:/home/${USERNAME}/result/home-path/bin/zsh" >> /etc/passwd; \
+      echo "${USERNAME}:x:${GID}:" >> /etc/group; \
+      echo "${USERNAME}:*:::::::" >> /etc/shadow; \
+    }; \
+    grep -q '^sshd:' /etc/passwd || { \
+      echo 'sshd:x:499:499:sshd privsep:/var/empty:/sbin/nologin' >> /etc/passwd; \
+      echo 'sshd:x:499:' >> /etc/group; \
+    }; \
+    mkdir -p /var/empty /etc/ssh /data/ssh /workspace; \
+    chown -Rh ${UID}:${GID} /home/${USERNAME} /workspace
+
+COPY docker/sshd_config /etc/ssh/sshd_config
+COPY --chmod=755 docker/entrypoint-dev.sh /usr/local/bin/entrypoint-dev.sh
+COPY --chmod=755 docker/dev-login.sh /usr/local/bin/dev-login
+
+# entrypointとdev-loginがビルド時のユーザー名を参照できるようにする
+# （ARGとスクリプト内デフォルトの二重管理を避ける）
+ENV DEV_USER=${USERNAME}
+ENV TERM=xterm-256color
+EXPOSE 22
+ENTRYPOINT ["/usr/local/bin/entrypoint-dev.sh"]
+
+########################################
+# Default target: --targetなしのdocker buildが従来どおり
+# slim runtimeイメージになるよう最終ステージをruntimeにする
+########################################
+FROM runtime

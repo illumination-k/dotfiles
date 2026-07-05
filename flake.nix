@@ -13,9 +13,14 @@
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    herdr = {
+      url = "git+https://github.com/ogulcancelik/herdr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, codex, ... }:
+  outputs = { self, nixpkgs, home-manager, codex, herdr, ... }:
     let
       # サポートするシステム
       systems = [ "x86_64-darwin" "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
@@ -38,7 +43,7 @@
           modules = [ ./home-manager/home.nix ];
           extraSpecialArgs = {
             inherit isDarwin isLinux;
-            inherit codex;
+            inherit codex herdr;
             system = system;
           };
         };

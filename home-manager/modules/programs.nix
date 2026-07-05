@@ -46,5 +46,6 @@
   ] ++ lib.optionals isLinux [
     # Linux専用パッケージ
     xsel         # クリップボード
+    openssh      # dev pod用sshd（ssh/sftp/ssh-keygen含む）
   ];
 }

@@ -3,9 +3,17 @@
 .github/
 .claude/
 
-# Docker itself (avoid self-rebuild invalidations)
-docker/
+# Docker itself (avoid self-rebuild invalidations).
+# devステージがCOPYするsshd_config/entrypoint-dev.sh/dev-login.shは
+# コンテキストに残す必要があるため、docker/丸ごとではなく個別に除外する。
+# builderステージは必要ファイルだけを明示的にCOPYしているので、コンテキストの
+# 内容がnixビルドのキャッシュを壊すことはない（ここでの除外はコンテキストサイズ削減用）
+docker/Dockerfile.ci
+docker/run-ci.sh
 .dockerignore
+
+# K8s manifests (not used by any image build)
+k8s/
 
 # Docs
 *.md
