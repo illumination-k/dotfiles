@@ -18,7 +18,8 @@
   outputs = { self, nixpkgs, home-manager, codex, ... }:
     let
       # サポートするシステム
-      systems = [ "x86_64-darwin" "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
+      # （x86_64-darwinはnixpkgs 26.11でサポート打ち切りのため除外）
+      systems = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
 
       # システム別設定を生成
       forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -48,9 +49,6 @@
       homeConfigurations = {
         # macOS (Apple Silicon)
         "illumination-k@aarch64-darwin" = mkHomeConfiguration "aarch64-darwin" "illumination-k";
-
-        # macOS (Intel)
-        "illumination-k@x86_64-darwin" = mkHomeConfiguration "x86_64-darwin" "illumination-k";
 
         # Linux (x86_64)
         "illumination-k@x86_64-linux" = mkHomeConfiguration "x86_64-linux" "illumination-k";
