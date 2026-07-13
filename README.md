@@ -34,7 +34,7 @@ curl -L https://raw.githubuercontent.com/illumination-k/dotfiles/master/bin/linu
 
 ### K8s dev pod (interactive Claude Code + herdr)
 
-Nix + Home Managerベースのイメージ（`docker/Dockerfile.ci` の `dev` ステージ）を使って、
+Nix + Home Managerベースのイメージ（`nix build .#docker-dev`、定義は `docker/images.nix`）を使って、
 K8s上にinteractiveな開発環境（claude-code + herdr + sshd）を立てられる。
 詳細は [k8s/claude-dev/README.md](k8s/claude-dev/README.md) を参照。
 

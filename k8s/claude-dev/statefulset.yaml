@@ -18,7 +18,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: dev
-          # docker/Dockerfile.ci の --target=dev でビルドしたイメージ
+          # nix build .#docker-dev（docker/images.nix）でビルドしたイメージ
           image: ghcr.io/illumination-k/devenv-dev:latest
           imagePullPolicy: Always
           ports:

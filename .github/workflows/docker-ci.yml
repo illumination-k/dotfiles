@@ -5,9 +5,11 @@ on:
   pull_request:
     branches: [ master ]
 
+# イメージはDockerfileではなくnix（dockerTools.streamLayeredImage）でビルドする。
+# 定義は docker/images.nix / flake.nix の packages 出力を参照。
 jobs:
   docker-build:
-    name: Build & Push Docker Image
+    name: Build & Push Docker Image (nix)
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -17,8 +19,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      # streamLayeredImageの成果物はイメージtarをstdoutへ流すスクリプト
+      - name: Build runtime image
+        run: |
+          nix build .#docker-runtime -o stream-runtime -L
+          ./stream-runtime | docker load
+
+      - name: Build dev image
+        run: |
+          nix build .#docker-dev -o stream-dev -L
+          ./stream-dev | docker load
+
+      - name: Smoke test
+        run: |
+          echo "=== Installed packages (runtime) ==="
+          docker run --rm devenv:latest sh -c 'ls /home/illumination-k/result/home-path/bin | sort'
+          docker run --rm devenv:latest sh -c 'zsh --version && hx --version && zellij --version'
+          echo "=== dev image ==="
+          docker run --rm --entrypoint /bin/sh devenv-dev:latest -c \
+            'id illumination-k && herdr --version && test -f /etc/ssh/sshd_config && test -x /usr/local/bin/entrypoint-dev.sh && test -x /usr/local/bin/dev-login'
 
       - name: Login to GHCR
         if: github.ref == 'refs/heads/master'
@@ -28,34 +56,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and Push (runtime)
-        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
-        with:
-          context: .
-          file: docker/Dockerfile.ci
-          target: runtime
-          push: ${{ github.ref == 'refs/heads/master' }}
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/devenv:latest
-            ghcr.io/${{ github.repository_owner }}/devenv:${{ github.sha }}
-          cache-from: type=gha,scope=runtime
-          cache-to: type=gha,mode=max,scope=runtime
-
-      # K8s dev pod用イメージ（sshd + entrypoint入り）。
-      # 共通ステージ（nix-base/deps/builder/runtime）はruntimeのGHAキャッシュから
-      # 復元する。runtimeステップがGHAキャッシュで完全ヒットした場合、レイヤーは
-      # builderローカルに実体化されないため、cache-fromがないとここでnixフルビルドが
-      # 再走してしまう。dev限定レイヤーは数秒で作れるのでcache-toは持たない。
-      # （かつてのCOPY "not found"エラーの原因はGHAキャッシュではなく、
-      #   .dockerignoreがdocker/を丸ごと除外していたこと）
-      - name: Build and Push (dev)
-        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
-        with:
-          context: .
-          file: docker/Dockerfile.ci
-          target: dev
-          push: ${{ github.ref == 'refs/heads/master' }}
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/devenv-dev:latest
-            ghcr.io/${{ github.repository_owner }}/devenv-dev:${{ github.sha }}
-          cache-from: type=gha,scope=runtime
+      - name: Push
+        if: github.ref == 'refs/heads/master'
+        run: |
+          for img in devenv devenv-dev; do
+            docker tag "${img}:latest" "ghcr.io/${{ github.repository_owner }}/${img}:latest"
+            docker tag "${img}:latest" "ghcr.io/${{ github.repository_owner }}/${img}:${{ github.sha }}"
+            docker push "ghcr.io/${{ github.repository_owner }}/${img}:latest"
+            docker push "ghcr.io/${{ github.repository_owner }}/${img}:${{ github.sha }}"
+          done

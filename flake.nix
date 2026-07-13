@@ -13,17 +13,13 @@
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    herdr = {
-      url = "git+https://github.com/ogulcancelik/herdr";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = { self, nixpkgs, home-manager, codex, herdr, ... }:
+  outputs = { self, nixpkgs, home-manager, codex, ... }:
     let
       # サポートするシステム
-      systems = [ "x86_64-darwin" "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
+      # （x86_64-darwinはnixpkgs 26.11でサポート打ち切りのため除外）
+      systems = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
 
       # システム別設定を生成
       forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -43,7 +39,7 @@
           modules = [ ./home-manager/home.nix ];
           extraSpecialArgs = {
             inherit isDarwin isLinux;
-            inherit codex herdr;
+            inherit codex;
             system = system;
           };
         };
@@ -54,15 +50,24 @@
         # macOS (Apple Silicon)
         "illumination-k@aarch64-darwin" = mkHomeConfiguration "aarch64-darwin" "illumination-k";
 
-        # macOS (Intel)
-        "illumination-k@x86_64-darwin" = mkHomeConfiguration "x86_64-darwin" "illumination-k";
-
         # Linux (x86_64)
         "illumination-k@x86_64-linux" = mkHomeConfiguration "x86_64-linux" "illumination-k";
 
         # Linux (ARM64) - Docker on Apple Silicon
         "illumination-k@aarch64-linux" = mkHomeConfiguration "aarch64-linux" "illumination-k";
       };
+
+      # Dockerイメージ（Linuxのみ）:
+      #   nix build .#docker-runtime && ./result | docker load
+      #   nix build .#docker-dev && ./result | docker load
+      packages = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (system:
+        import ./docker/images.nix {
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
+          homeConfiguration = self.homeConfigurations."illumination-k@${system}";
+        });
 
       # 開発環境（コンテナ内で使用）
       devShells = forAllSystems (system:

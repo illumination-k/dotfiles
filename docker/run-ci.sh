@@ -1,27 +1,38 @@
 #!/bin/bash
 set -eu
 
-IMAGE="dotfiles-ci"
+# nixでOCIイメージをビルドしてローカルdockerへロードする。
+#   ./docker/run-ci.sh          # runtime + dev 両方
+#   ./docker/run-ci.sh --dev    # devのみ
+# nixが無い環境（macOS等）ではnixos/nixコンテナ内でビルドする。
+# キャッシュを持たないため毎回フル置換ダウンロードになる点に注意
+# （普段のビルドはGitHub Actionsに任せる想定）。
 
-# インタラクティブモード（デバッグ用）
-if [ "${1:-}" = "--interactive" ]; then
-  docker build -f docker/Dockerfile.ci -t "$IMAGE" --target=nix-base .
-  docker run -it --rm -v $(pwd):/workspace "$IMAGE"
-  exit 0
-fi
+NIX_IMAGE="nixos/nix:2.34.6@sha256:e2fe74e96e965653c7b8f16ac64d1e56581c63c84d7fa07fb0692fd055cd06b0"
 
-# dev podイメージビルドモード
+build() {
+  attr="$1"
+  if command -v nix >/dev/null 2>&1; then
+    nix build ".#${attr}" -o "result-${attr}"
+    "./result-${attr}" | docker load
+  else
+    echo "nix not found; building inside ${NIX_IMAGE} (slow, no cache)" >&2
+    docker run --rm -i -v "$(pwd)":/workspace -w /workspace "$NIX_IMAGE" \
+      sh -c "nix --extra-experimental-features 'nix-command flakes' \
+               build --option filter-syscalls false '.#${attr}' -o /tmp/stream \
+             && /tmp/stream" \
+      | docker load
+  fi
+}
+
 if [ "${1:-}" = "--dev" ]; then
-  docker build -f docker/Dockerfile.ci --target=dev -t "${IMAGE}-dev" .
+  build docker-dev
   echo ""
-  echo "=== SUCCESS (dev image: ${IMAGE}-dev) ==="
+  echo "=== SUCCESS (devenv-dev:latest) ==="
   exit 0
 fi
 
-# CI テストモード（デフォルト）: runtimeとdevの両方をビルドして検証する
-# （devはruntimeの差分レイヤーだけなので追加コストは小さい）
-echo "=== Building and testing Home Manager ==="
-docker build -f docker/Dockerfile.ci --target=runtime -t "$IMAGE" .
-docker build -f docker/Dockerfile.ci --target=dev -t "${IMAGE}-dev" .
+build docker-runtime
+build docker-dev
 echo ""
-echo "=== SUCCESS ==="
+echo "=== SUCCESS (devenv:latest, devenv-dev:latest) ==="
