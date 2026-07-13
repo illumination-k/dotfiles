@@ -76,6 +76,8 @@
     findutils    # find, xargs等
     gnugrep      # grep
     gnused       # sed
+    gawk         # awk（goawk等の間借りだとリンク切れしうるため明示的に持つ）
+    diffutils    # diff, cmp（他パッケージのstoreパス依存だとGCで消えうる）
     getent       # getent
     xsel         # クリップボード
     openssh      # dev pod用sshd（ssh/sftp/ssh-keygen含む）
