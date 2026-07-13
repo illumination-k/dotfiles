@@ -203,6 +203,9 @@ in {
 
     # zsh機能有効化
     enableCompletion = true;
+    # dev podへrootで入るとfpath内の~/.zsh/plugins（uid 1000所有）が
+    # compauditに引っかかるため、-uでチェックをスキップする
+    completionInit = "autoload -U compinit && compinit -u";
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
   };

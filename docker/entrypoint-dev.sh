@@ -42,6 +42,10 @@ chmod 600 "${SSH_DIR}/environment"
 # PATHは常に書き出す（sshdの組み込みデフォルトPATHにはnixのbinが含まれず、
 # git/claude等がssh経由で見つからなくなるため）
 printf 'PATH=%s\n' "${PATH}" >> "${SSH_DIR}/environment"
+# nix-ldシム用。無いとssh経由のセッションでFHSバイナリ
+# （uv管理のPython等）が動かない
+[ -z "${NIX_LD:-}" ] || printf 'NIX_LD=%s\n' "${NIX_LD}" >> "${SSH_DIR}/environment"
+[ -z "${NIX_LD_LIBRARY_PATH:-}" ] || printf 'NIX_LD_LIBRARY_PATH=%s\n' "${NIX_LD_LIBRARY_PATH}" >> "${SSH_DIR}/environment"
 for var in ${EXPORT_VARS}; do
   case "${var}" in
     *[!A-Za-z0-9_]* | [0-9]*)

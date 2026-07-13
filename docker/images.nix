@@ -48,6 +48,29 @@ let
     }
   );
 
+  # FHS互換の動的リンカ:
+  # このイメージは/nix/storeベースで/lib64等のFHSパスが無いため、Nix外の
+  # プリビルドバイナリ（uv管理のPython、PyInstaller/pipx製CLI等）が
+  # インタプリタ /lib64/ld-linux-*.so を見つけられず起動できない。
+  # nix-ldのシムをFHSのインタプリタパスへ置き、NIX_LD/NIX_LD_LIBRARY_PATHで
+  # 実体のglibcローダーとライブラリ群へ委譲する（NixOSのprograms.nix-ld相当）。
+  fhsLdDir = if pkgs.stdenv.hostPlatform.isx86_64 then "lib64" else "lib";
+  fhsLd = pkgs.runCommand "image-fhs-ld" { } ''
+    mkdir -p $out/${fhsLdDir}
+    ln -s ${pkgs.nix-ld}/libexec/nix-ld \
+      "$out/${fhsLdDir}/$(basename ${pkgs.stdenv.cc.bintools.dynamicLinker})"
+  '';
+  nixLdLibraryPath = pkgs.lib.makeLibraryPath (with pkgs; [
+    glibc
+    zlib
+    zstd
+    openssl
+    bzip2
+    xz
+    curl
+    stdenv.cc.cc # libstdc++ / libgcc_s
+  ]);
+
   # runtime用/etc（rootのみ。ログインユーザーはdev側で追加）
   baseEtc = pkgs.runCommand "image-etc-base" { } ''
     mkdir -p $out/etc
@@ -126,6 +149,8 @@ let
     "PATH=${binPath}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
     "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
     "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
+    "NIX_LD=${pkgs.stdenv.cc.bintools.dynamicLinker}"
+    "NIX_LD_LIBRARY_PATH=${nixLdLibraryPath}"
   ];
 
 in
@@ -138,6 +163,7 @@ in
       dockerTools.binSh
       dockerTools.usrBinEnv
       dockerTools.caCertificates
+      fhsLd
       baseEtc
     ];
     fakeRootCommands = homeSetup;
@@ -156,6 +182,7 @@ in
       dockerTools.binSh
       dockerTools.usrBinEnv
       dockerTools.caCertificates
+      fhsLd
       devEtc
       devTree
     ];
