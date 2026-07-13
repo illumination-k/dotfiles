@@ -65,6 +65,11 @@
       };
 
       merge.conflictStyle = "zdiff3";
+    } // lib.optionalAttrs isLinux {
+      # コンテナ（dev pod）へrootで入るとuid 1000所有のrepoが
+      # "dubious ownership" 扱いになりgitが動かないため、
+      # Linux（コンテナ用途）では全ディレクトリを信頼する
+      safe.directory = [ "*" ];
     };
 
     # リポジトリ別 user 設定（personal repos でメール切替など）
