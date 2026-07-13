@@ -68,8 +68,13 @@ echo "home-manager/modules/local.nix" >> .gitignore
 # home.nixでlocal.nixをインポート（コメント解除）
 # imports = [ ./modules/local.nix ];
 
-# 適用
-home-manager switch --impure --flake .#"$(whoami)@$(uname -m)-$(uname -s | tr '[:upper:]' '[:lower:]')"
+# 適用（flake.nixに定義済みの構成名を指定する）
+# macOS (Apple Silicon)
+home-manager switch --impure --flake .#"illumination-k@aarch64-darwin"
+# Linux (x86_64)
+home-manager switch --impure --flake .#"illumination-k@x86_64-linux"
+# Linux (ARM64)
+home-manager switch --impure --flake .#"illumination-k@aarch64-linux"
 ```
 
 ### 3. パッケージモジュールを有効化
@@ -113,8 +118,8 @@ home-manager switch --impure --flake .
 ### ビルドエラー
 
 ```bash
-# 詳細なトレースを表示
-nix build --show-trace .#homeConfigurations."$(whoami)@$(uname -m)-$(uname -s | tr '[:upper:]' '[:lower:]')".activationPackage
+# 詳細なトレースを表示（構成名は環境に合わせて選ぶ）
+nix build --show-trace .#homeConfigurations."illumination-k@aarch64-darwin".activationPackage
 ```
 
 ### ロールバック

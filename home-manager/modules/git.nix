@@ -7,6 +7,9 @@
     # 基本設定
     settings = {
       user.name = "illumination-k";
+      # デフォルトのemail（コンテナ等local.nix無しの環境でcommitできるように）
+      # マシン固有のemailはlocal.nixで上書きする
+      user.email = lib.mkDefault "illumination.k.27@gmail.com";
 
       core = {
         filemode = false;
@@ -94,4 +97,7 @@
 
   # .gitignore_globalファイル配置
   home.file.".gitignore_global".source = ../../.gitignore_global;
+
+  # includeIfが参照するpersonal設定（未配置だとincludeが空振りする）
+  home.file.".gitconfig-personal".source = ../../.gitconfig-personal;
 }

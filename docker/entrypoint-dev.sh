@@ -39,6 +39,9 @@ NL="$(printf '\nx')"
 NL="${NL%x}"
 : > "${SSH_DIR}/environment"
 chmod 600 "${SSH_DIR}/environment"
+# PATHは常に書き出す（sshdの組み込みデフォルトPATHにはnixのbinが含まれず、
+# git/claude等がssh経由で見つからなくなるため）
+printf 'PATH=%s\n' "${PATH}" >> "${SSH_DIR}/environment"
 for var in ${EXPORT_VARS}; do
   case "${var}" in
     *[!A-Za-z0-9_]* | [0-9]*)

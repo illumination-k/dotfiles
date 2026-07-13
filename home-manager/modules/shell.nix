@@ -52,9 +52,13 @@ in {
       ${builtins.readFile ../../.zsh/80_functions.zsh}
 
       # zshrc コンパイル
-      if [ ! -f ~/.zshrc.zwc ] || [ ~/.zshrc -nt ~/.zshrc.zwc ]; then
-          zcompile ~/.zshrc
+      # home-manager配下の~/.zshrcはnix storeへのsymlinkでmtimeが常に1970のため、
+      # -ntによる比較は使えない。リンク先store pathの変化で再コンパイルを判定する。
+      zshrc_target="$(readlink -f ~/.zshrc 2>/dev/null || echo ~/.zshrc)"
+      if [ ! -f ~/.zshrc.zwc ] || [ "$(cat ~/.zshrc.zwc.src 2>/dev/null)" != "$zshrc_target" ]; then
+          zcompile ~/.zshrc && echo "$zshrc_target" > ~/.zshrc.zwc.src
       fi
+      unset zshrc_target
 
       # ローカルプロファイル読み込み
       if [ -f ~/.local_profile ]; then
@@ -77,14 +81,51 @@ in {
       if has_cmd uv; then
           eval "$(uv generate-shell-completion zsh)"
       fi
+
+      # ===== 30_alias.zsh（shellAliasesで表現できない構文） =====
+      # 複数ファイルのmv 例 zmv *.txt *.txt.bk
+      autoload -Uz zmv
+      alias zmv='noglob zmv -W'
+
+      # suffix alias
+      alias -s py=python3
+      alias -s sh=bash
+      alias -s html='open'
+
+      function extract() {
+          case $1 in
+          *.tar.gz | *.tgz) tar xzvf $1 ;;
+          *.tar.xz) tar Jxvf $1 ;;
+          *.zip) unzip $1 ;;
+          *.lzh) lha e $1 ;;
+          *.tar.bz2 | *.tbz) tar xjvf $1 ;;
+          *.tar.Z) tar zxvf $1 ;;
+          *.gz) gzip -d $1 ;;
+          *.bz2) bzip2 -dc $1 ;;
+          *.Z) uncompress $1 ;;
+          *.tar) tar xvf $1 ;;
+          *.arj) unarj $1 ;;
+          esac
+      }
+      alias -s {gz,tgz,zip,lzh,bz2,tbz,Z,tar,arj,xz}=extract
+
+      # global alias
+      alias -g A='| awk'
+      alias -g C='| c'
+      alias -g W='| wc -w'
+      alias -g G='| grep'
+      alias -g H='| head'
+      alias -g T='| tail'
+      alias -g L='| less -R'
+      alias -g X='| xargs'
     '';
 
     # ===== 30_alias.zsh =====
     shellAliases = {
       # ls（ezaまたはplatform依存）
-      ls = "exa -F";
-      lsa = "exa -aF";
-      tree = "exa -hTF --ignore-glob='.git'";
+      ls = "eza -F";
+      lsa = "eza -aF";
+      tree = "eza -hTF --ignore-glob='.git'";
 
       # cd shortcuts
       ".." = "cd ..";
@@ -173,7 +214,9 @@ in {
   };
 
   # 設定ファイルの配置
-  home.file.".starship.toml".source = ../../.starship.toml;
+  # starshipはデフォルトで~/.config/starship.tomlのみを読む
+  # （legacyの.zsh/40_prompt.zshはSTARSHIP_CONFIG=~/.starship.tomlを設定していた）
+  xdg.configFile."starship.toml".source = ../../.starship.toml;
   home.file.".colorrc".source = ../../.colorrc;
 
 }
