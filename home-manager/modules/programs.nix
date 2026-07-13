@@ -79,6 +79,7 @@
     getent       # getent
     xsel         # クリップボード
     openssh      # dev pod用sshd（ssh/sftp/ssh-keygen含む）
+    bashInteractive # bash前提のスクリプト用（最小コンテナにはbashが無い）
 
     # コンテナ最小環境で欠けがちな基盤ツール
     # （coreutilsにtarは含まれない。miseのランタイム展開等に必須）
