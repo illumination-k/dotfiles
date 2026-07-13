@@ -1,7 +1,10 @@
 name: Docker CI
 
 on:
+  # pull_requestと重複してPRブランチで二重ビルドされるのを避けるため、
+  # pushはmaster（レジストリへpushする経路）のみ
   push:
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -16,6 +19,14 @@ jobs:
       packages: write
 
     steps:
+      # イメージ2つ+nix storeでrunnerのディスク(14GB)が尽きるため、
+      # 不要なプリインストールを削除して空きを確保する
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          sudo docker image prune -af
+          df -h /
+
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -47,6 +58,9 @@ jobs:
           echo "=== dev image ==="
           docker run --rm --entrypoint /bin/sh devenv-dev:latest -c \
             'id illumination-k && herdr --version && test -f /etc/ssh/sshd_config && test -x /usr/local/bin/entrypoint-dev.sh && test -x /usr/local/bin/dev-login'
+          echo "=== nix-ld (FHS binary support) ==="
+          docker run --rm --entrypoint /bin/sh devenv-dev:latest -c \
+            'test -e /lib64/ld-linux-x86-64.so.2 && [ -n "$NIX_LD" ] && [ -e "$NIX_LD" ] && [ -n "$NIX_LD_LIBRARY_PATH" ]'
 
       - name: Login to GHCR
         if: github.ref == 'refs/heads/master'
