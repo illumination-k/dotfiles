@@ -45,6 +45,11 @@
 
   ] ++ lib.optionals isLinux [
     # Linux専用パッケージ
+    coreutils    # mv, mkdir, dirname等
+    findutils    # find, xargs等
+    gnugrep      # grep
+    gnused       # sed
+    getent       # getent
     xsel         # クリップボード
     openssh      # dev pod用sshd（ssh/sftp/ssh-keygen含む）
   ];

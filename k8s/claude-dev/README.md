@@ -8,10 +8,12 @@ dotfiles（Nix + Home Manager）ベースのイメージで、K8s上に長寿命
 
 ## イメージのビルド
 
+イメージはDockerfileではなくnix（`dockerTools.streamLayeredImage`、定義は `docker/images.nix`）でビルドする。
+
 ```bash
-# dev pod用イメージ（Dockerfile.ciのdevステージ）
-docker build -f docker/Dockerfile.ci --target=dev \
-  -t ghcr.io/illumination-k/devenv-dev:latest .
+# dev pod用イメージ（要nix。無ければ ./docker/run-ci.sh --dev がnixos/nixコンテナ経由でビルドする）
+nix build .#docker-dev && ./result | docker load
+docker tag devenv-dev:latest ghcr.io/illumination-k/devenv-dev:latest
 docker push ghcr.io/illumination-k/devenv-dev:latest
 ```
 

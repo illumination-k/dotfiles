@@ -1,4 +1,4 @@
-{ config, pkgs, lib, isDarwin, isLinux, codex, herdr, system, ... }:
+{ config, pkgs, lib, isDarwin, isLinux, codex, system, ... }:
 
 {
   # Home Managerバージョン
@@ -18,7 +18,6 @@
     hello  # 動作確認用
     codex.packages.${system}.codex  # OpenAI Codex CLI (Rust版)
     claude-code  # Anthropic Claude Code CLI
-    herdr.packages.${system}.default  # agent-aware terminal multiplexer
   ];
 
   # 環境変数
