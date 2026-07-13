@@ -4,6 +4,9 @@
   programs.git = {
     enable = true;
 
+    # git-lfs本体のインストールとfilter設定（旧filter.lfs手書き設定の置き換え）
+    lfs.enable = true;
+
     # 基本設定
     settings = {
       user.name = "illumination-k";
@@ -56,13 +59,6 @@
       };
 
       github.user = "illumination-k";
-
-      filter.lfs = {
-        required = true;
-        clean = "git-lfs clean -- %f";
-        smudge = "git-lfs smudge -- %f";
-        process = "git-lfs filter-process";
-      };
 
       merge.conflictStyle = "zdiff3";
     } // lib.optionalAttrs isLinux {
