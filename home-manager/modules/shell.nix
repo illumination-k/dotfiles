@@ -137,6 +137,9 @@ in {
       # docker
       d = "docker";
 
+      # kubernetes
+      k = "kubectl";
+
       # git
       g = "git";
       gu = "gitui";  # Git TUI
