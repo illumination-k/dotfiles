@@ -80,6 +80,7 @@
     diffutils    # diff, cmp（他パッケージのstoreパス依存だとGCで消えうる）
     getent       # getent
     xsel         # クリップボード
+    libsecret    # secret-tool CLI + libsecret-1.so（GCで消えないようprofileに固定）
     openssh      # dev pod用sshd（ssh/sftp/ssh-keygen含む）
     bashInteractive # bash前提のスクリプト用（最小コンテナにはbashが無い）
 

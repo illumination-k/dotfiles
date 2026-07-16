@@ -69,6 +69,14 @@ let
     xz
     curl
     stdenv.cc.cc # libstdc++ / libgcc_s
+
+    # .NET SDK/ランタイム（mise等のプリビルド配布物）が動的ロードする依存
+    icu          # libicuuc/libicui18n（グローバリゼーション。無いとdotnetが起動しない）
+    krb5         # libgssapi_krb5（Kerberos認証。HttpClient等が参照）
+    lttng-ust    # liblttng-ust（トレーシング。参照だけされるので置いておく）
+
+    # シークレットストア（git-credential-manager等がDllImportでロード）
+    libsecret
   ]);
 
   # runtime用/etc（rootのみ。ログインユーザーはdev側で追加）
