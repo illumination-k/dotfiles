@@ -13,9 +13,14 @@
       url = "github:sadjow/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    entra-helper = {
+      url = "github:illumination-k/entra-helper";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, codex, ... }:
+  outputs = { self, nixpkgs, home-manager, codex, entra-helper, ... }:
     let
       # サポートするシステム
       # （x86_64-darwinはnixpkgs 26.11でサポート打ち切りのため除外）
@@ -30,6 +35,7 @@
           pkgs = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
+            overlays = [ entra-helper.overlays.default ];
           };
           isDarwin = pkgs.stdenv.isDarwin;
           isLinux = pkgs.stdenv.isLinux;
@@ -65,6 +71,7 @@
           pkgs = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
+            overlays = [ entra-helper.overlays.default ];
           };
           homeConfiguration = self.homeConfigurations."illumination-k@${system}";
         });
