@@ -24,6 +24,7 @@
     ghq          # Gitリポジトリ管理
     delta        # diff表示改善 (git-delta)
     gitui        # ターミナルUI Gitクライアント
+    hunk         # agent向け変更セットのターミナルdiffビューア
 
     # Rust製CLIツール
     eza          # ls代替（exaの後継）
@@ -61,6 +62,9 @@
 
     # Kubernetes
     kubectl      # Kubernetes CLI
+
+    # 認証
+    entra-helper # Entra IDのaccess tokenを発行するCLI（overlay経由・自作）
 
     # シェル環境
     zsh

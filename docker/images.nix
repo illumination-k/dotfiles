@@ -23,30 +23,33 @@ let
   homeDir = "/home/${username}";
   binPath = "${homeDir}/result/home-path/bin";
 
-  # herdr: pinしたnixpkgsにまだ存在しない場合は公式リリースの
-  # 静的バイナリへフォールバックする（flake update後は自動でnixpkgs版になる）。
-  herdr = pkgs.herdr or (
+  # herdr: nixpkgs版が下記バージョンより古い（or 無い）場合は公式リリースの
+  # 静的バイナリへフォールバックする（flake updateでnixpkgsが追いつけば自動でnixpkgs版になる）。
+  herdrMinVersion = "0.7.4";
+  herdrBin =
     let
-      version = "0.7.1";
       arch = pkgs.stdenv.hostPlatform.parsed.cpu.name; # x86_64 / aarch64
       sha256s = {
-        x86_64 = "b965acaffc2c22f54b6e6c64af7cf8e98a3f4ac2622630a0599c67a4b9d8a654";
-        aarch64 = "3d757ac30c631e79dc45038c3ecc6423fe13a89f9cffa0f415aedd2c27f1576c";
+        x86_64 = "bc0fc02d4ba500f9cac2353a43e67fe036785ecca6eb55378e050fac3c103059";
+        aarch64 = "544e0002de42806d1ab64ccdef3a7e7414f24717b0b6b022bc9e57d2eefd26a2";
       };
     in
     pkgs.stdenvNoCC.mkDerivation {
       pname = "herdr-bin";
-      inherit version;
+      version = herdrMinVersion;
       src = pkgs.fetchurl {
-        url = "https://github.com/ogulcancelik/herdr/releases/download/v${version}/herdr-linux-${arch}";
+        url = "https://github.com/ogulcancelik/herdr/releases/download/v${herdrMinVersion}/herdr-linux-${arch}";
         sha256 = sha256s.${arch};
       };
       dontUnpack = true;
       installPhase = ''
         install -Dm755 $src $out/bin/herdr
       '';
-    }
-  );
+    };
+  herdr =
+    if pkgs ? herdr && pkgs.lib.versionAtLeast pkgs.herdr.version herdrMinVersion
+    then pkgs.herdr
+    else herdrBin;
 
   # FHS互換の動的リンカ:
   # このイメージは/nix/storeベースで/lib64等のFHSパスが無いため、Nix外の

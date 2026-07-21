@@ -21,6 +21,26 @@
         "type": "github"
       }
     },
+    "entra-helper": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784210357,
+        "narHash": "sha256-Mvrw/GkCssdSpk1mia3oKvM1w2XNwG4Rd6ME2WswSwI=",
+        "owner": "illumination-k",
+        "repo": "entra-helper",
+        "rev": "231d2bb579221e08a9bbdd5e8de1ee0e23a2e6c5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "illumination-k",
+        "repo": "entra-helper",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -78,6 +98,7 @@
     "root": {
       "inputs": {
         "codex": "codex",
+        "entra-helper": "entra-helper",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs"
       }
