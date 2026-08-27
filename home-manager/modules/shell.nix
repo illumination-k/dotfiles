@@ -123,9 +123,11 @@ in {
     # ===== 30_alias.zsh =====
     shellAliases = {
       # ls（ezaまたはplatform依存）
-      ls = "eza -F";
-      lsa = "eza -aF";
-      tree = "eza -hTF --ignore-glob='.git'";
+      # --classify は値を取るオプションなので `=auto` を付ける
+      # （`-F <path>` だとパスが値として食われて exit 2 になる）
+      ls = "eza --classify=auto";
+      lsa = "eza -a --classify=auto";
+      tree = "eza -hT --classify=auto --ignore-glob='.git'";
 
       # cd shortcuts
       ".." = "cd ..";

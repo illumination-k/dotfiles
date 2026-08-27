@@ -25,6 +25,7 @@
     delta        # diff表示改善 (git-delta)
     gitui        # ターミナルUI Gitクライアント
     hunk         # agent向け変更セットのターミナルdiffビューア
+    git-secrets  # コミット前にsecretの混入を検出するgitフック
 
     # Rust製CLIツール
     eza          # ls代替（exaの後継）
