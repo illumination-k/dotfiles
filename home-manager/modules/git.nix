@@ -61,6 +61,30 @@
       github.user = "illumination-k";
 
       merge.conflictStyle = "zdiff3";
+
+      # git-secrets（`git secrets --register-aws --global` 相当）
+      # 検出ルールはグローバル、フックは init.templateDir 経由で
+      # 新規 clone / init のリポジトリに自動で入る（既存repoは `git secrets --install`）
+      secrets = {
+        providers = [ "git secrets --aws-provider" ];
+        patterns = [
+          "(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}"
+          "ABSK[A-Za-z0-9+/]{109,}=*"
+          "bedrock-api-key-YmVkcm9jay5hbWF6b25hd3MuY29t"
+          ''("|')?(AWS|aws|Aws)?_?(SECRET|secret|Secret)?_?(ACCESS|access|Access)?_?(KEY|key|Key)("|')?\s*(:|=>|=)\s*("|')?[A-Za-z0-9/\+=]{40}("|')?''
+          # 12桁の数字全般に当たるため誤検出しやすい。引っかかった公開値は
+          # リポジトリ側で `git config --add secrets.allowed <値>` して黙らせる
+          ''("|')?(AWS|aws|Aws)?_?(ACCOUNT|account|Account)_?(ID|id|Id)?("|')?\s*(:|=>|=)\s*("|')?[0-9]{4}\-?[0-9]{4}\-?[0-9]{4}("|')?''
+        ];
+        allowed = [
+          # AWSドキュメントのサンプル値
+          "AKIAIOSFODNN7EXAMPLE"
+          "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+        ];
+      };
+
+      # git-secretsのフックを新規リポジトリへ自動配置する
+      init.templateDir = "${config.home.homeDirectory}/.git-templates/git-secrets";
     } // lib.optionalAttrs isLinux {
       # コンテナ（dev pod）へrootで入るとuid 1000所有のrepoが
       # "dubious ownership" 扱いになりgitが動かないため、
@@ -101,4 +125,28 @@
 
   # includeIfが参照するpersonal設定（未配置だとincludeが空振りする）
   home.file.".gitconfig-personal".source = ../../.gitconfig-personal;
+
+  # git-secretsのフックテンプレート（init.templateDirが参照する）
+  # `git secrets --install` が書くものと同じ内容を宣言的に配置する
+  home.file.".git-templates/git-secrets/hooks/pre-commit" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      git secrets --pre_commit_hook -- "$@"
+    '';
+  };
+  home.file.".git-templates/git-secrets/hooks/commit-msg" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      git secrets --commit_msg_hook -- "$@"
+    '';
+  };
+  home.file.".git-templates/git-secrets/hooks/prepare-commit-msg" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      git secrets --prepare_commit_msg_hook -- "$@"
+    '';
+  };
 }
