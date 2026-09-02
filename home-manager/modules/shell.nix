@@ -144,7 +144,6 @@ in {
 
       # git
       g = "git";
-      gu = "gitui";  # Git TUI
 
       # ghq
       gcd = "cd $(ghq list -p | fuzzy_search)";
@@ -153,9 +152,6 @@ in {
 
       # grep
       grep = if (builtins.hasAttr "ripgrep" pkgs) then "rg" else "grep --color";
-
-      # ターミナルマルチプレクサ
-      zj = "zellij";
 
       # Python/uv
       py = "python3";

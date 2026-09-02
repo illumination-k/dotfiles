@@ -57,6 +57,6 @@ in
     ./modules/shell.nix      # zsh設定
     ./modules/git.nix        # git設定
     ./modules/helix.nix      # Helixエディタ設定
-    ./modules/zellij.nix     # Zellijターミナル設定
+    ./modules/claude.nix     # Claude Codeグローバルメモリ
   ];
 }

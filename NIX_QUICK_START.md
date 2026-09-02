@@ -104,10 +104,10 @@ home-manager switch --impure --flake .
 ## 管理対象パッケージ
 
 - **開発ツール**: cmake, gcc
-- **Git関連**: gh, ghq, delta, gitui
+- **Git関連**: gh, ghq, git-secrets
 - **Rust CLIツール**: eza, bat, ripgrep, fd, skim
 - **Rust環境**: cargo, rustc
-- **エディタ・ターミナル**: helix, zellij, yazi
+- **エディタ・ターミナル**: helix, yazi
 - **バージョン管理**: mise, uv
 - **シェル**: zsh, starship
 

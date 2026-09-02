@@ -54,7 +54,7 @@ jobs:
         run: |
           echo "=== Installed packages (runtime) ==="
           docker run --rm devenv:latest sh -c 'ls /home/illumination-k/result/home-path/bin | sort'
-          docker run --rm devenv:latest sh -c 'zsh --version && hx --version && zellij --version'
+          docker run --rm devenv:latest sh -c 'zsh --version && hx --version'
           echo "=== dev image ==="
           docker run --rm --entrypoint /bin/sh devenv-dev:latest -c \
             'id illumination-k && herdr --version && test -f /etc/ssh/sshd_config && test -x /usr/local/bin/entrypoint-dev.sh && test -x /usr/local/bin/dev-login'
