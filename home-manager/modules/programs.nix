@@ -6,24 +6,18 @@
     cmake
     gnumake      # make（cmakeのビルドに必須）
     gcc
-    just         # Rust製タスクランナー（Makefile代替）
     pkg-config   # native依存クレート（openssl-sys等）のビルドに必要
     openssl
 
     # ネットワーク
     curl         # 各種スクリプト・インストーラの前提
-    xh           # Rust製HTTPクライアント（HTTPie互換）
 
     # JSON/YAML
-    jaq          # Rust製jqクローン
     jq           # 互換用（ghやスクリプトがjq前提のことが多い）
-    yq-go        # YAML処理（k8sマニフェスト用）
 
     # Git関連
     gh           # GitHub CLI
     ghq          # Gitリポジトリ管理
-    delta        # diff表示改善 (git-delta)
-    gitui        # ターミナルUI Gitクライアント
     hunk         # agent向け変更セットのターミナルdiffビューア
     git-secrets  # コミット前にsecretの混入を検出するgitフック
 
@@ -54,7 +48,6 @@
 
     # エディタ & ターミナル
     helix        # モダンなテキストエディタ
-    zellij       # ターミナルマルチプレクサ（tmux代替）
     yazi         # ターミナルファイルマネージャー
 
     # 言語バージョン管理
@@ -86,6 +79,8 @@
     getent       # getent
     xsel         # クリップボード
     libsecret    # secret-tool CLI + libsecret-1.so（GCで消えないようprofileに固定）
+    dbus         # dbus-daemon（Secret Serviceのセッションバス。headless podでは起動スクリプトが立てる）
+    gnome-keyring # gnome-keyring-daemon（libsecretのSecret Service実装）
     openssh      # dev pod用sshd（ssh/sftp/ssh-keygen含む）
     bashInteractive # bash前提のスクリプト用（最小コンテナにはbashが無い）
 
@@ -100,17 +95,4 @@
     procps       # ps, top, free等
     rsync
   ];
-
-  # direnv（nix-direnv統合）
-  programs.direnv = {
-    enable = true;
-    enableZshIntegration = true;
-    nix-direnv.enable = true;
-  };
-
-  # zoxide（Rust製のスマートcd）
-  programs.zoxide = {
-    enable = true;
-    enableZshIntegration = true;
-  };
 }

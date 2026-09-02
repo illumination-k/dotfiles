@@ -111,15 +111,6 @@
     ];
   };
 
-  # delta統合
-  programs.delta = {
-    enable = true;
-    enableGitIntegration = true;
-    options = {
-      navigate = true;
-    };
-  };
-
   # .gitignore_globalファイル配置
   home.file.".gitignore_global".source = ../../.gitignore_global;
 
