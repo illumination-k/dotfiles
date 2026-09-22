@@ -157,7 +157,9 @@ let
   commonEnv = [
     "USER=${username}"
     "HOME=${homeDir}"
-    "PATH=${binPath}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    # ~/.local/bin を先頭に: claude-code はイメージに入れず、PVC等に
+    # native installerで入れたものを優先して使う（home.nix参照）
+    "PATH=${homeDir}/.local/bin:${binPath}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
     "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
     "NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
     "NIX_LD=${pkgs.stdenv.cc.bintools.dynamicLinker}"
