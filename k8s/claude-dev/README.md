@@ -2,7 +2,7 @@
 
 dotfiles（Nix + Home Manager）ベースのイメージで、K8s上に長寿命のinteractive開発環境を立てる構成。
 
-- **herdr**（agent-awareなターミナルマルチプレクサ）と **claude-code** はHome Manager経由でイメージに焼き込み済み
+- **herdr**（agent-awareなターミナルマルチプレクサ）はHome Manager経由でイメージに焼き込み済み。**claude-code** はイメージに含めず、PVC上に公式native installer（`curl -fsSL https://claude.ai/install.sh | bash`）で入れて自動更新に任せる（nix版だとflake update + 再ビルドまで上がらないため）
 - **StatefulSet + PVC** で `/workspace` と `~/.claude`（セッション履歴・認証）を永続化。Podが再スケジュールされても `claude --resume` で復元できる
 - Pod内に **sshd** が常駐し、`kubectl port-forward` 経由のssh接続（Zed Remote Development含む）に対応
 
