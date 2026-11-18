@@ -94,5 +94,25 @@
     less         # pager（git log / kubectl explain等が前提）
     procps       # ps, top, free等
     rsync
+    which        # インストーラ等が `which` 前提で存在確認する
+    file
+    tree
+    gnupatch     # patch
+    util-linux   # more, column, flock, script等
+    ncurses      # tput, clear
+    psmisc       # killall
+    gettext      # envsubst
+    zip
+    bzip2
+    unixtools.xxd
+    inetutils    # hostname
+    wget         # wget前提のスクリプト用
+
+    # ネットワーク調査（Pod内デバッグ用）
+    dnsutils     # dig, nslookup
+    iproute2     # ip, ss
+    netcat-openbsd # nc
+    lsof
+    strace
   ];
 }
